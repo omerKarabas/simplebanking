@@ -39,9 +39,11 @@ public class BankAccount extends BaseEntity {
 	@NotNull(message = "Balance cannot be null")
 	@DecimalMin(value = "0.0", message = "Balance cannot be negative")
 	@Column(name = "balance", nullable = false)
+	@Builder.Default
 	private double balance = 0.0;
 
 	@OneToMany(mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@Builder.Default
 	private List<Transaction> transactions = new ArrayList<>();
 	
 	public void post(Transaction transaction) throws InsufficientBalanceException {

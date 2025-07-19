@@ -24,7 +24,6 @@ public class PhoneBillPaymentTransaction extends Transaction {
 	@Column(name = "phone_number")
 	private String phoneNumber;
 	
-	// Constructor with enum
 	public PhoneBillPaymentTransaction(PhoneCompany phoneCompany, String phoneNumber, double amount) {
 		this.phoneCompany = phoneCompany;
 		this.phoneNumber = phoneNumber;

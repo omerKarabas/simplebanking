@@ -1,0 +1,17 @@
+package com.eteration.simplebanking.service;
+
+import com.eteration.simplebanking.domain.entity.BankAccount;
+import com.eteration.simplebanking.domain.enums.PhoneCompany;
+import com.eteration.simplebanking.exception.InsufficientBalanceException;
+import com.eteration.simplebanking.model.dto.response.TransactionStatusResponse;
+
+public interface TransactionService {
+    
+    TransactionStatusResponse credit(BankAccount account, double amount) throws InsufficientBalanceException;
+    
+    TransactionStatusResponse debit(BankAccount account, double amount) throws InsufficientBalanceException;
+    
+    TransactionStatusResponse phoneBillPayment(BankAccount account, PhoneCompany phoneCompany, String phoneNumber, double amount) throws InsufficientBalanceException;
+    
+    TransactionStatusResponse checkPayment(BankAccount account, String payee, double amount) throws InsufficientBalanceException;
+} 

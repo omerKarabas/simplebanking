@@ -35,5 +35,9 @@ public abstract class Transaction extends BaseEntity {
 	@JoinColumn(name = "account_id", nullable = false)
 	private BankAccount account;
 	
+	@NotNull(message = "Approval code cannot be null")
+	@Column(name = "approval_code", nullable = false, unique = true)
+	private String approvalCode;
+	
 	public abstract void execute(BankAccount account) throws InsufficientBalanceException;
 } 

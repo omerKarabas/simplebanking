@@ -50,7 +50,6 @@ public class BankAccount extends BaseEntity {
 		transaction.execute(this);
 		transaction.setAccount(this);
 		this.transactions.add(transaction);
-		recalculateBalance();
 	}
 	
 	public void credit(double amount) throws InsufficientBalanceException {
@@ -77,18 +76,5 @@ public class BankAccount extends BaseEntity {
 		post(check);
 	}
 	
-	private void recalculateBalance() {
-		this.balance = this.transactions.stream()
-			.mapToDouble(t -> {
-				if (t instanceof DepositTransaction) {
-					return t.getAmount();
-				} else if (t instanceof WithdrawalTransaction || 
-						   t instanceof PhoneBillPaymentTransaction || 
-						   t instanceof CheckTransaction) {
-					return -t.getAmount();
-				}
-				return 0.0;
-			})
-			.sum();
-	}
+
 }

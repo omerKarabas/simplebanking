@@ -7,11 +7,11 @@ import com.eteration.simplebanking.model.dto.response.TransactionStatusResponse;
 
 public interface TransactionService {
     
-    TransactionStatusResponse credit(BankAccount account, double amount) throws InsufficientBalanceException;
+    TransactionStatusResponse credit(BankAccount account, double amount);
     
-    TransactionStatusResponse debit(BankAccount account, double amount) throws InsufficientBalanceException;
+    TransactionStatusResponse debit(BankAccount account, double amount);
     
-    TransactionStatusResponse phoneBillPayment(BankAccount account, PhoneCompany phoneCompany, String phoneNumber, double amount) throws InsufficientBalanceException;
+    TransactionStatusResponse phoneBillPayment(BankAccount account, PhoneCompany phoneCompany, String phoneNumber, double amount);
     
-    TransactionStatusResponse checkPayment(BankAccount account, String payee, double amount) throws InsufficientBalanceException;
+    TransactionStatusResponse checkPayment(BankAccount account, String payee, double amount);
 } 

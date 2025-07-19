@@ -1,10 +1,14 @@
 package com.eteration.simplebanking.controller.advice;
 
 import com.eteration.simplebanking.exception.AccountNotFoundException;
-import com.eteration.simplebanking.model.dto.response.ErrorResponse;
 import com.eteration.simplebanking.exception.InsufficientBalanceException;
 import com.eteration.simplebanking.exception.InvalidTransactionException;
+import com.eteration.simplebanking.exception.cosntant.MessageKeys;
+import com.eteration.simplebanking.model.dto.response.ErrorResponse;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -20,7 +24,20 @@ import java.util.Map;
 
 @Slf4j
 @RestControllerAdvice
+@RequiredArgsConstructor
 public class GlobalExceptionHandler {
+
+    private final MessageSource messageSource;
+
+
+    private String getMessage(MessageKeys messageKey) {
+        return messageSource.getMessage(messageKey.getKey(), null, LocaleContextHolder.getLocale());
+    }
+
+
+    private String getMessage(MessageKeys messageKey, Object... args) {
+        return messageSource.getMessage(messageKey.getKey(), args, LocaleContextHolder.getLocale());
+    }
 
     @ExceptionHandler(InsufficientBalanceException.class)
     public ResponseEntity<ErrorResponse> handleInsufficientBalanceException(InsufficientBalanceException ex,
@@ -31,8 +48,8 @@ public class GlobalExceptionHandler {
         ErrorResponse errorResponse = ErrorResponse.builder()
                 .timestamp(LocalDateTime.now())
                 .status(HttpStatus.BAD_REQUEST.value())
-                .error("Insufficient Balance")
-                .message(ex.getMessage())
+                .error(getMessage(MessageKeys.ERROR_TITLE_INSUFFICIENT_BALANCE))
+                .message(getMessage(MessageKeys.ERROR_INSUFFICIENT_BALANCE))
                 .path(request.getDescription(false))
                 .build();
 
@@ -48,8 +65,8 @@ public class GlobalExceptionHandler {
         ErrorResponse errorResponse = ErrorResponse.builder()
                 .timestamp(LocalDateTime.now())
                 .status(HttpStatus.NOT_FOUND.value())
-                .error("Account Not Found")
-                .message(ex.getMessage())
+                .error(getMessage(MessageKeys.ERROR_TITLE_ACCOUNT_NOT_FOUND))
+                .message(getMessage(MessageKeys.ERROR_ACCOUNT_NOT_FOUND, ex.getMessage()))
                 .path(request.getDescription(false))
                 .build();
 
@@ -65,8 +82,8 @@ public class GlobalExceptionHandler {
         ErrorResponse errorResponse = ErrorResponse.builder()
                 .timestamp(LocalDateTime.now())
                 .status(HttpStatus.BAD_REQUEST.value())
-                .error("Invalid Transaction")
-                .message(ex.getMessage())
+                .error(getMessage(MessageKeys.ERROR_TITLE_INVALID_TRANSACTION))
+                .message(getMessage(MessageKeys.ERROR_INVALID_TRANSACTION, ex.getMessage()))
                 .path(request.getDescription(false))
                 .build();
 
@@ -106,8 +123,8 @@ public class GlobalExceptionHandler {
         ErrorResponse errorResponse = ErrorResponse.builder()
                 .timestamp(LocalDateTime.now())
                 .status(HttpStatus.BAD_REQUEST.value())
-                .error("Validation Error")
-                .message("Validation failed for the request")
+                .error(getMessage(MessageKeys.ERROR_TITLE_VALIDATION_ERROR))
+                .message(getMessage(MessageKeys.ERROR_VALIDATION_FAILED))
                 .details(fieldErrors)
                 .path(request.getDescription(false))
                 .build();
@@ -115,17 +132,17 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(errorResponse);
     }
 
-    @ExceptionHandler(HttpMessageNotReadableException.class)
+        @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ErrorResponse> handleHttpMessageNotReadableException(HttpMessageNotReadableException ex,
-                                                                               WebRequest request) {
+                                                                                WebRequest request) {
 
         log.error("HTTP message not readable exception: {}", ex.getMessage());
 
         ErrorResponse errorResponse = ErrorResponse.builder()
                 .timestamp(LocalDateTime.now())
                 .status(HttpStatus.BAD_REQUEST.value())
-                .error("Invalid Request Body")
-                .message("The request body could not be read or parsed")
+                .error(getMessage(MessageKeys.ERROR_TITLE_INVALID_REQUEST_BODY))
+                .message(getMessage(MessageKeys.ERROR_INVALID_REQUEST_BODY))
                 .path(request.getDescription(false))
                 .build();
 
@@ -141,8 +158,8 @@ public class GlobalExceptionHandler {
         ErrorResponse errorResponse = ErrorResponse.builder()
                 .timestamp(LocalDateTime.now())
                 .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
-                .error("Internal Server Error")
-                .message("An unexpected error occurred")
+                .error(getMessage(MessageKeys.ERROR_TITLE_INTERNAL_SERVER_ERROR))
+                .message(getMessage(MessageKeys.ERROR_INTERNAL_SERVER))
                 .path(request.getDescription(false))
                 .build();
 

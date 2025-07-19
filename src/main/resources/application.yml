@@ -1,6 +1,11 @@
 spring:
   application:
     name: simplebanking
+  messages:
+    basename: messages
+    encoding: UTF-8
+    fallback-to-system-locale: false
+    default-locale: en
   datasource:
     url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:simplebanking}
     username: ${DB_USER:postgres}

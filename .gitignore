@@ -1,6 +1,7 @@
 HELP.md
 build/
 bin/
+target/
 .history
 !**/src/main/**
 !**/src/test/**

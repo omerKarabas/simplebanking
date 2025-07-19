@@ -1,9 +1,0 @@
-/Users/omerkarabas/Development/projects/simplebanking/src/main/java/com/eteration/simplebanking/model/DepositTransaction.java
-/Users/omerkarabas/Development/projects/simplebanking/src/main/java/com/eteration/simplebanking/model/Account.java
-/Users/omerkarabas/Development/projects/simplebanking/src/main/java/com/eteration/simplebanking/model/WithdrawalTransaction.java
-/Users/omerkarabas/Development/projects/simplebanking/src/main/java/com/eteration/simplebanking/controller/AccountController.java
-/Users/omerkarabas/Development/projects/simplebanking/src/main/java/com/eteration/simplebanking/model/Transaction.java
-/Users/omerkarabas/Development/projects/simplebanking/src/main/java/com/eteration/simplebanking/services/AccountService.java
-/Users/omerkarabas/Development/projects/simplebanking/src/main/java/com/eteration/simplebanking/DemoApplication.java
-/Users/omerkarabas/Development/projects/simplebanking/src/main/java/com/eteration/simplebanking/model/InsufficientBalanceException.java
-/Users/omerkarabas/Development/projects/simplebanking/src/main/java/com/eteration/simplebanking/controller/TransactionStatus.java

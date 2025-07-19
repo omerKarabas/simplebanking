@@ -2,6 +2,7 @@ package com.eteration.simplebanking.service.impl;
 
 import com.eteration.simplebanking.domain.entity.BankAccount;
 import com.eteration.simplebanking.domain.repository.BankAccountRepository;
+import com.eteration.simplebanking.exception.AccountNotFoundException;
 import com.eteration.simplebanking.model.dto.response.BankAccountResponse;
 import com.eteration.simplebanking.model.mapper.BankAccountMapper;
 import com.eteration.simplebanking.service.BankAccountService;
@@ -33,7 +34,7 @@ public class BankAccountServiceImpl implements BankAccountService {
     @Override
     public BankAccount findAccountByNumber(String accountNumber) {
         return bankAccountRepository.findByAccountNumber(accountNumber)
-                .orElseThrow(() -> new RuntimeException("Account not found: " + accountNumber));
+                .orElseThrow(() -> new AccountNotFoundException("Account not found: " + accountNumber));
     }
 
     @Override

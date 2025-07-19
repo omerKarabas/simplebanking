@@ -5,7 +5,6 @@ import com.eteration.simplebanking.model.dto.response.TransactionStatusResponse;
 import com.eteration.simplebanking.model.dto.request.CreateAccountRequest;
 import com.eteration.simplebanking.model.dto.request.TransactionRequest;
 import com.eteration.simplebanking.service.BankingFacadeService;
-import com.eteration.simplebanking.exception.InsufficientBalanceException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;

@@ -33,7 +33,7 @@ public class BankingFacadeServiceImpl implements BankingFacadeService {
     }
 
     @Override
-    public TransactionStatusResponse credit(String accountNumber, double amount) throws InsufficientBalanceException {
+    public TransactionStatusResponse credit(String accountNumber, double amount) {
         log.info("Credit transaction: accountNumber={}, amount={}", accountNumber, amount);
         BankAccount account = bankAccountService.findAccountByNumber(accountNumber);
         TransactionStatusResponse result = transactionService.credit(account, amount);
@@ -42,7 +42,7 @@ public class BankingFacadeServiceImpl implements BankingFacadeService {
     }
 
     @Override
-    public TransactionStatusResponse debit(String accountNumber, double amount) throws InsufficientBalanceException {
+    public TransactionStatusResponse debit(String accountNumber, double amount) {
         log.info("Debit transaction: accountNumber={}, amount={}", accountNumber, amount);
         BankAccount account = bankAccountService.findAccountByNumber(accountNumber);
         TransactionStatusResponse result = transactionService.debit(account, amount);

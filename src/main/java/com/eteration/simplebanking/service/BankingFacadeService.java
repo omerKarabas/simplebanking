@@ -10,7 +10,7 @@ public interface BankingFacadeService {
     
     BankAccountResponse getBankAccount(String accountNumber);
     
-    TransactionStatusResponse credit(String accountNumber, double amount) throws InsufficientBalanceException;
+    TransactionStatusResponse credit(String accountNumber, double amount);
     
-    TransactionStatusResponse debit(String accountNumber, double amount) throws InsufficientBalanceException;
+    TransactionStatusResponse debit(String accountNumber, double amount);
 } 

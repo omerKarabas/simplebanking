@@ -27,14 +27,14 @@ public class BankAccountController {
 
     @PostMapping("/credit/{accountNumber}")
     public ResponseEntity<TransactionStatusResponse> credit(@PathVariable String accountNumber,
-                                                            @RequestBody TransactionRequest request) throws InsufficientBalanceException {
+                                                            @RequestBody TransactionRequest request) {
         TransactionStatusResponse result = bankingFacadeService.credit(accountNumber, request.amount());
         return ResponseEntity.ok(result);
     }
 
     @PostMapping("/debit/{accountNumber}")
     public ResponseEntity<TransactionStatusResponse> debit(@PathVariable String accountNumber,
-                                                           @RequestBody TransactionRequest request) throws InsufficientBalanceException {
+                                                           @RequestBody TransactionRequest request) {
 
         TransactionStatusResponse result = bankingFacadeService.debit(accountNumber, request.amount());
         return ResponseEntity.ok(result);

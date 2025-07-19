@@ -30,32 +30,32 @@ public class TransactionServiceImpl implements TransactionService {
     // TODO: Implement Strategy Pattern with TransactionType enum and TransactionStrategy interface
     @Override
     @Transactional
-    public TransactionStatusResponse credit(BankAccount account, double amount) throws InsufficientBalanceException {
+    public TransactionStatusResponse credit(BankAccount account, double amount) {
         return executeTransaction(account, amount, DepositTransaction::new, "Credit");
     }
 
     @Override
     @Transactional
-    public TransactionStatusResponse debit(BankAccount account, double amount) throws InsufficientBalanceException {
+    public TransactionStatusResponse debit(BankAccount account, double amount) {
         return executeTransaction(account, amount, WithdrawalTransaction::new, "Debit");
     }
 
     @Override
     @Transactional
-    public TransactionStatusResponse phoneBillPayment(BankAccount account, PhoneCompany phoneCompany, String phoneNumber, double amount) throws InsufficientBalanceException {
+    public TransactionStatusResponse phoneBillPayment(BankAccount account, PhoneCompany phoneCompany, String phoneNumber, double amount) {
         return executeComplexTransaction(account, amount, () -> new PhoneBillPaymentTransaction(phoneCompany, phoneNumber, amount), "PhoneBillPayment");
     }
 
     @Override
     @Transactional
-    public TransactionStatusResponse checkPayment(BankAccount account, String payee, double amount) throws InsufficientBalanceException {
+    public TransactionStatusResponse checkPayment(BankAccount account, String payee, double amount) {
         return executeComplexTransaction(account, amount, () -> new CheckTransaction(payee, amount), "CheckPayment");
     }
 
     private TransactionStatusResponse executeTransaction(BankAccount account,
                                                          double amount,
                                                          Supplier<Transaction> transactionSupplier,
-                                                         String operationType) throws InsufficientBalanceException {
+                                                         String operationType) {
         return executeComplexTransaction(account, amount, () -> {
             Transaction transaction = transactionSupplier.get();
             transaction.setAmount(amount);
@@ -67,7 +67,7 @@ public class TransactionServiceImpl implements TransactionService {
     private TransactionStatusResponse executeComplexTransaction(BankAccount account,
                                                                 double amount,
                                                                 Supplier<Transaction> transactionSupplier,
-                                                                String operationType) throws InsufficientBalanceException {
+                                                                String operationType) {
         try {
             String approvalCode = UUID.randomUUID().toString();
             Transaction transaction = transactionSupplier.get();
@@ -83,7 +83,7 @@ public class TransactionServiceImpl implements TransactionService {
 
         } catch (InsufficientBalanceException e) {
             log.error("{} transaction failed - Insufficient balance: accountNumber={}, amount={}, error={}", operationType, account.getAccountNumber(), amount, e.getMessage());
-            throw e;
+            throw new RuntimeException(operationType + " transaction failed: " + e.getMessage(), e);
         } catch (Exception e) {
             log.error("{} transaction failed: accountNumber={}, amount={}, error={}", operationType, account.getAccountNumber(), amount, e.getMessage());
             throw new RuntimeException(operationType + " transaction failed: " + e.getMessage(), e);

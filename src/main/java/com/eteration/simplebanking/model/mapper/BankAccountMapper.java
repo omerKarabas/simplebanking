@@ -13,9 +13,13 @@ import java.util.stream.Collectors;
 public class BankAccountMapper {
 
     public BankAccountResponse toAccountResponse(BankAccount account) {
-        List<TransactionResponse> transactionResponses = account.getTransactions().stream()
-                .map(this::toTransactionResponse)
-                .toList();
+        List<TransactionResponse> transactionResponses = null;
+        
+        if (account.getTransactions() != null) {
+            transactionResponses = account.getTransactions().stream()
+                    .map(this::toTransactionResponse)
+                    .toList();
+        }
 
         return new BankAccountResponse(
                 account.getAccountNumber(),

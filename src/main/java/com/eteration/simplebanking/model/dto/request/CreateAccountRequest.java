@@ -1,7 +1,7 @@
 package com.eteration.simplebanking.model.dto.request;
 
-import com.eteration.simplebanking.domain.validation.annotations.AccountNumber;
-import com.eteration.simplebanking.domain.validation.annotations.PhoneNumber;
+import com.eteration.simplebanking.domain.validation.annotation.AccountNumber;
+import com.eteration.simplebanking.domain.validation.annotation.PhoneNumber;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 

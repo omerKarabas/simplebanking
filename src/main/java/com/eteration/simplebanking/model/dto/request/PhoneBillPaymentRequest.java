@@ -1,7 +1,7 @@
 package com.eteration.simplebanking.model.dto.request;
 
 import com.eteration.simplebanking.domain.enums.PhoneCompany;
-import com.eteration.simplebanking.domain.validation.annotations.PositiveAmount;
+import com.eteration.simplebanking.domain.validation.annotation.PositiveAmount;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 

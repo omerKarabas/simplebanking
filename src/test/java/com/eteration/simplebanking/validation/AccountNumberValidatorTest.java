@@ -1,7 +1,7 @@
 package com.eteration.simplebanking.validation;
 
-import com.eteration.simplebanking.domain.validation.annotations.AccountNumber;
-import com.eteration.simplebanking.domain.validation.validators.AccountNumberValidator;
+import com.eteration.simplebanking.domain.validation.annotation.AccountNumber;
+import com.eteration.simplebanking.domain.validation.validator.AccountNumberValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;

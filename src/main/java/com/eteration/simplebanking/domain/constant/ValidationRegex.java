@@ -1,4 +1,4 @@
-package com.eteration.simplebanking.domain.constants;
+package com.eteration.simplebanking.domain.constant;
 
 /**
  * Validation için regex pattern'leri

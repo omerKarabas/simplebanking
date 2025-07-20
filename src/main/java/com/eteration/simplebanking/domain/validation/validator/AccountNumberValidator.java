@@ -1,8 +1,8 @@
-package com.eteration.simplebanking.domain.validation.validators;
+package com.eteration.simplebanking.domain.validation.validator;
 
 import com.eteration.simplebanking.domain.repository.BankAccountRepository;
-import com.eteration.simplebanking.domain.validation.annotations.AccountNumber;
-import com.eteration.simplebanking.domain.constants.ValidationRegex;
+import com.eteration.simplebanking.domain.validation.annotation.AccountNumber;
+import com.eteration.simplebanking.domain.constant.ValidationRegex;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import org.springframework.beans.factory.annotation.Autowired;

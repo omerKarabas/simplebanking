@@ -1,7 +1,7 @@
 package com.eteration.simplebanking.validation;
 
-import com.eteration.simplebanking.domain.validation.annotations.PositiveAmount;
-import com.eteration.simplebanking.domain.validation.validators.PositiveAmountValidator;
+import com.eteration.simplebanking.domain.validation.annotation.PositiveAmount;
+import com.eteration.simplebanking.domain.validation.validator.PositiveAmountValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -9,7 +9,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
 class PositiveAmountValidatorTest {
 

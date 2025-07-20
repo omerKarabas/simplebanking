@@ -859,7 +859,7 @@ public enum MessageKeys {
 }
 ```
 
-**messages.properties (İngilizce):**
+**messages.properties (English):**
 ```properties
 error.insufficient.balance=Insufficient balance for this transaction
 error.account.not.found=Account not found with account number: {0}
@@ -927,7 +927,7 @@ public final class CacheConstants {
 }
 ```
 
-### 3. Cache Kullanımı
+### 3. Cache Usage
 
 #### Repository Level Cache
 ```java
@@ -1203,13 +1203,6 @@ public class TestConstants {
 }
 ```
 
-#### **Test Coverage Goals**
-- **Unit Tests**: %90+ coverage
-- **Integration Tests**: Critical business flows
-- **Controller Tests**: All API endpoints
-- **Exception Tests**: Error scenarios
-- **Validation Tests**: Input validation
-
 #### **Test Execution**
 ```bash
 # Unit tests
@@ -1217,8 +1210,15 @@ mvn test
 
 # Integration tests
 mvn test -Dtest=*IntegrationTest
-
 ```
+
+#### **Continuous Integration for Test Monitoring**
+
+*GitHub Actions workflow dashboard showing automated test execution, build processes, and deployment pipeline. This CI/CD pipeline was implemented to continuously monitor and control our test suite, ensuring code quality and reliability. The workflow automatically runs tests on every push and pull request, providing real-time feedback on test results and build status.*
+
+![github-action.png](images/github-action.png)
+
+
 
 
 

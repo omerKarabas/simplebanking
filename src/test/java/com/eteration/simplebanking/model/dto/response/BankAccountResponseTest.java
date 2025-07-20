@@ -121,7 +121,7 @@ class BankAccountResponseTest {
         String expectedToString = "BankAccountResponse[accountNumber=" + accountNumber + 
                                 ", owner=" + owner + 
                                 ", balance=" + balance + 
-                                ", createDate=" + createDate + 
+                                ", createdAt=" + createDate + 
                                 ", transactions=" + transactions + "]";
         assertEquals(expectedToString, response1.toString());
     }

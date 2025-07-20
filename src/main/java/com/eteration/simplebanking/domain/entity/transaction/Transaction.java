@@ -1,6 +1,7 @@
 package com.eteration.simplebanking.domain.entity.transaction;
 
 import com.eteration.simplebanking.domain.entity.BaseEntity;
+import com.eteration.simplebanking.domain.validation.annotations.PositiveAmount;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -8,7 +9,6 @@ import com.eteration.simplebanking.exception.InsufficientBalanceException;
 import com.eteration.simplebanking.domain.entity.BankAccount;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
@@ -21,21 +21,21 @@ import java.time.LocalDateTime;
 @DiscriminatorColumn(name = "transaction_type", discriminatorType = DiscriminatorType.STRING)
 public abstract class Transaction extends BaseEntity {
 	
-	@NotNull(message = "Amount cannot be null")
-	@DecimalMin(value = "0.01", message = "Amount must be greater than 0")
+	@NotNull(message = "{validation.transaction.amount.required}")
+	@PositiveAmount
 	@Column(name = "amount", nullable = false)
 	protected double amount;
 	
-	@NotNull(message = "Date cannot be null")
+	@NotNull(message = "{validation.transaction.date.required}")
 	@Column(name = "date", nullable = false)
 	protected LocalDateTime date;
 	
-	@NotNull(message = "Account cannot be null")
+	@NotNull(message = "{validation.transaction.account.required}")
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "account_id", nullable = false)
 	private BankAccount account;
 	
-	@NotNull(message = "Approval code cannot be null")
+	@NotNull(message = "{validation.transaction.approval.code.required}")
 	@Column(name = "approval_code", nullable = false, unique = true)
 	private String approvalCode;
 	

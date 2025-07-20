@@ -206,7 +206,10 @@ public class GlobalExceptionHandler {
         ex.getBindingResult().getAllErrors().forEach(error -> {
             String fieldName = ((FieldError) error).getField();
             String errorMessage = error.getDefaultMessage();
-            fieldErrors.put(fieldName, errorMessage);
+            
+            // Try to resolve i18n message for validation errors
+            String i18nMessage = resolveValidationMessage(errorMessage);
+            fieldErrors.put(fieldName, i18nMessage);
         });
 
         ErrorResponse errorResponse = ErrorResponse.builder()
@@ -219,6 +222,32 @@ public class GlobalExceptionHandler {
                 .build();
 
         return ResponseEntity.badRequest().body(errorResponse);
+    }
+    
+    private String resolveValidationMessage(String defaultMessage) {
+        if (defaultMessage == null) {
+            return getMessage(MessageKeys.ERROR_VALIDATION_FAILED);
+        }
+        
+        // Try to resolve common validation messages
+        switch (defaultMessage) {
+            case "Invalid account number format":
+                return getMessage(MessageKeys.VALIDATION_ACCOUNT_NUMBER_INVALID);
+            case "Account number already exists":
+                return getMessage(MessageKeys.VALIDATION_ACCOUNT_NUMBER_UNIQUE);
+            case "Invalid phone number format":
+                return getMessage(MessageKeys.VALIDATION_PHONE_NUMBER_INVALID);
+            case "Amount must be positive":
+                return getMessage(MessageKeys.VALIDATION_AMOUNT_POSITIVE);
+            case "Account number is required":
+                return getMessage(MessageKeys.VALIDATION_ACCOUNT_NUMBER_REQUIRED);
+            case "Phone number is required":
+                return getMessage(MessageKeys.VALIDATION_PHONE_NUMBER_REQUIRED);
+            case "Amount is required":
+                return getMessage(MessageKeys.VALIDATION_AMOUNT_REQUIRED);
+            default:
+                return defaultMessage;
+        }
     }
 
         @ExceptionHandler(HttpMessageNotReadableException.class)

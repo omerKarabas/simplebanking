@@ -4,10 +4,10 @@ import com.eteration.simplebanking.domain.validation.annotations.PositiveAmount;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
-public record CheckPaymentRequest(
-    @NotBlank(message = "{validation.payee.required}")
-    @Size(min = 2, max = 100, message = "{validation.payee.size}")
-    String payee,
+public record BankAccountRequest(
+    @NotBlank(message = "{validation.owner.required}")
+    @Size(min = 2, max = 100, message = "{validation.owner.size}")
+    String owner,
     
     @PositiveAmount
     double amount

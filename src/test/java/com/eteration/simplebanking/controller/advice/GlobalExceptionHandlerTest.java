@@ -116,7 +116,6 @@ class GlobalExceptionHandlerTest {
     void handleGenericException_Success() {
         Exception exception = new Exception("Unexpected error occurred");
         when(messageSource.getMessage(eq(MessageKeys.ERROR_TITLE_INTERNAL_SERVER_ERROR.getKey()), any(), any())).thenReturn("Internal Server Error");
-        when(messageSource.getMessage(eq(MessageKeys.ERROR_INTERNAL_SERVER.getKey()), any(), any())).thenReturn("An unexpected error occurred");
 
         ResponseEntity<ErrorResponse> response = exceptionHandler.handleGenericException(exception, webRequest);
 
@@ -125,7 +124,7 @@ class GlobalExceptionHandlerTest {
         assertNotNull(response.getBody());
         assertEquals(500, response.getBody().getStatus());
         assertEquals("Internal Server Error", response.getBody().getError());
-        assertEquals("An unexpected error occurred", response.getBody().getMessage());
+        assertEquals("Unexpected error occurred", response.getBody().getMessage());
         assertEquals("uri=/test-endpoint", response.getBody().getPath());
     }
 

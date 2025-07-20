@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -28,16 +27,15 @@ import java.util.List;
 })
 public class BankAccount extends BaseEntity {
 
-	@NotNull(message = "Owner cannot be null")
+	@NotNull(message = "{validation.owner.required}")
 	@Column(name = "owner", nullable = false)
 	private String owner;
 
-	@NotNull(message = "Account number cannot be null")
+	@NotNull(message = "{validation.account.number.required}")
 	@Column(name = "account_number", nullable = false, unique = true)
 	private String accountNumber;
 
-	@NotNull(message = "Balance cannot be null")
-	@DecimalMin(value = "0.0", message = "Balance cannot be negative")
+	@NotNull(message = "{validation.balance.required}")
 	@Column(name = "balance", nullable = false)
 	@Builder.Default
 	private double balance = 0.0;

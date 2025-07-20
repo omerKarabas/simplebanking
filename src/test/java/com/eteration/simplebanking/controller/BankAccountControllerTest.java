@@ -31,7 +31,6 @@ import static com.eteration.simplebanking.TestDataBuilder.*;
 @AutoConfigureMockMvc
 class BankAccountControllerTest {
 
-    @Spy
     @InjectMocks
     private BankAccountController controller;
  

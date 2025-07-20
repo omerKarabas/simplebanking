@@ -105,14 +105,8 @@ public class TransactionStrategyFactory {
         if (transaction == null) {
             throw new TransactionValidationException(MessageKeys.VALIDATION_TRANSACTION_NULL);
         }
-
-        if (transaction.getAmount() < 0) {
-            throw new TransactionValidationException(MessageKeys.VALIDATION_TRANSACTION_AMOUNT_NEGATIVE);
-        }
-
-        if (transaction.getDate() == null) {
-            throw new TransactionValidationException(MessageKeys.VALIDATION_TRANSACTION_DATE_NULL);
-        }
+        // Transaction validasyonları artık anotasyonlarla yapılıyor
+        // @TransactionAmount ve @TransactionDate anotasyonları kullanılıyor
     }
 
     public boolean hasStrategy(TransactionType transactionType) {

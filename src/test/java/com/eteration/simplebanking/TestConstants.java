@@ -21,6 +21,10 @@ public final class TestConstants {
     public static final String TEST_OWNER_NAME_5 = "Jane Smith";
     public static final String TEST_OWNER_NAME_6 = "José María García-López";
     
+    // Telefon Numaraları
+    public static final String TEST_PHONE_NUMBER = "5551234567";
+    public static final String TEST_PHONE_NUMBER_2 = "5559876543";
+    
     // Bakiye Değerleri
     public static final double INITIAL_BALANCE = 1000.0;
     public static final double SMALL_BALANCE = 500.0;

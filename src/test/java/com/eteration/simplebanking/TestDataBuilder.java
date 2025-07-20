@@ -7,6 +7,7 @@ import com.eteration.simplebanking.model.dto.request.CreateAccountRequest;
 import com.eteration.simplebanking.model.dto.request.TransactionRequest;
 import com.eteration.simplebanking.model.dto.response.BankAccountResponse;
 import com.eteration.simplebanking.model.dto.response.TransactionStatusResponse;
+import com.eteration.simplebanking.domain.enums.TransactionType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -84,43 +85,43 @@ public final class TestDataBuilder {
     
     // Request Builder Methods
     public static CreateAccountRequest createAccountRequest() {
-        return new CreateAccountRequest(TEST_OWNER_NAME, TEST_ACCOUNT_NUMBER);
+        return new CreateAccountRequest(TEST_OWNER_NAME, TEST_ACCOUNT_NUMBER, TEST_PHONE_NUMBER);
     }
     
     public static CreateAccountRequest createAccountRequestWithCustomData(String owner, String accountNumber) {
-        return new CreateAccountRequest(owner, accountNumber);
+        return new CreateAccountRequest(owner, accountNumber, TEST_PHONE_NUMBER);
     }
     
     public static CreateAccountRequest createAccountRequest2() {
-        return new CreateAccountRequest(TEST_OWNER_NAME_2, TEST_ACCOUNT_NUMBER_2);
+        return new CreateAccountRequest(TEST_OWNER_NAME_2, TEST_ACCOUNT_NUMBER_2, TEST_PHONE_NUMBER_2);
     }
     
     public static TransactionRequest createTransactionRequest(double amount) {
-        return new TransactionRequest(amount);
+        return new TransactionRequest(TransactionType.DEPOSIT, amount);
     }
     
     public static TransactionRequest createSmallAmountRequest() {
-        return new TransactionRequest(SMALL_AMOUNT);
+        return new TransactionRequest(TransactionType.DEPOSIT, SMALL_AMOUNT);
     }
     
     public static TransactionRequest createMediumAmountRequest() {
-        return new TransactionRequest(MEDIUM_AMOUNT);
+        return new TransactionRequest(TransactionType.DEPOSIT, MEDIUM_AMOUNT);
     }
     
     public static TransactionRequest createLargeAmountRequest() {
-        return new TransactionRequest(LARGE_AMOUNT);
+        return new TransactionRequest(TransactionType.DEPOSIT, LARGE_AMOUNT);
     }
     
     public static TransactionRequest createCreditAmountRequest() {
-        return new TransactionRequest(CREDIT_AMOUNT);
+        return new TransactionRequest(TransactionType.DEPOSIT, CREDIT_AMOUNT);
     }
     
     public static TransactionRequest createDebitAmountRequest() {
-        return new TransactionRequest(DEBIT_AMOUNT);
+        return new TransactionRequest(TransactionType.WITHDRAWAL, DEBIT_AMOUNT);
     }
     
     public static TransactionRequest createInsufficientAmountRequest() {
-        return new TransactionRequest(INSUFFICIENT_AMOUNT);
+        return new TransactionRequest(TransactionType.WITHDRAWAL, INSUFFICIENT_AMOUNT);
     }
     
     // Response Builder Methods

@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import jakarta.validation.Valid;
 
 @Slf4j
 @RestController
@@ -23,21 +24,21 @@ public class BankAccountController {
     private final BankingFacadeService bankingFacadeService;
 
     @PostMapping("/create")
-    public ResponseEntity<BankAccountResponse> createBankAccount(@RequestBody CreateAccountRequest request) {
+    public ResponseEntity<BankAccountResponse> createBankAccount(@Valid @RequestBody CreateAccountRequest request) {
         BankAccountResponse result = bankingFacadeService.createBankAccount(request.owner(), request.accountNumber());
         return ResponseEntity.ok(result);
     }
 
     @PostMapping("/credit/{accountNumber}")
     public ResponseEntity<TransactionStatusResponse> credit(@PathVariable String accountNumber,
-                                                            @RequestBody TransactionRequest request) {
+                                                            @Valid @RequestBody TransactionRequest request) {
         TransactionStatusResponse result = bankingFacadeService.credit(accountNumber, request.amount());
         return ResponseEntity.ok(result);
     }
 
     @PostMapping("/debit/{accountNumber}")
     public ResponseEntity<TransactionStatusResponse> debit(@PathVariable String accountNumber,
-                                                           @RequestBody TransactionRequest request) {
+                                                           @Valid @RequestBody TransactionRequest request) {
 
         TransactionStatusResponse result = bankingFacadeService.debit(accountNumber, request.amount());
         return ResponseEntity.ok(result);
@@ -51,14 +52,14 @@ public class BankAccountController {
 
     @PostMapping("/phone-bill-payment/{accountNumber}")
     public ResponseEntity<TransactionStatusResponse> phoneBillPayment(@PathVariable String accountNumber,
-                                                                     @RequestBody PhoneBillPaymentRequest request) {
+                                                                     @Valid @RequestBody PhoneBillPaymentRequest request) {
         TransactionStatusResponse result = bankingFacadeService.phoneBillPayment(accountNumber, request.phoneCompany(), request.phoneNumber(), request.amount());
         return ResponseEntity.ok(result);
     }
 
     @PostMapping("/check-payment/{accountNumber}")
     public ResponseEntity<TransactionStatusResponse> checkPayment(@PathVariable String accountNumber,
-                                                                 @RequestBody CheckPaymentRequest request) {
+                                                                 @Valid @RequestBody CheckPaymentRequest request) {
         TransactionStatusResponse result = bankingFacadeService.checkPayment(accountNumber, request.payee(), request.amount());
         return ResponseEntity.ok(result);
     }

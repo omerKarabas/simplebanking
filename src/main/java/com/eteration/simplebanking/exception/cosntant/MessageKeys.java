@@ -31,6 +31,15 @@ public enum MessageKeys {
     VALIDATION_TRANSACTION_NULL("validation.transaction.null"),
     VALIDATION_TRANSACTION_AMOUNT_NEGATIVE("validation.transaction.amount.negative"),
     VALIDATION_TRANSACTION_DATE_NULL("validation.transaction.date.null"),
+    
+    // Custom Validation Messages
+    VALIDATION_ACCOUNT_NUMBER_INVALID("validation.account.number.invalid"),
+    VALIDATION_ACCOUNT_NUMBER_UNIQUE("validation.account.number.unique"),
+    VALIDATION_PHONE_NUMBER_INVALID("validation.phone.number.invalid"),
+    VALIDATION_AMOUNT_POSITIVE("validation.amount.positive"),
+    VALIDATION_ACCOUNT_NUMBER_REQUIRED("validation.account.number.required"),
+    VALIDATION_PHONE_NUMBER_REQUIRED("validation.phone.number.required"),
+    VALIDATION_AMOUNT_REQUIRED("validation.amount.required"),
 
     // Business Logic Messages
     INSUFFICIENT_BALANCE_FOR_PHONE_BILL("error.insufficient.balance.phone.bill"),

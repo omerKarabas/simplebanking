@@ -58,11 +58,11 @@ class BankAccountServiceTest {
         );
 
         // Mock SecureMaskUtil methods
-        lenient().when(secureMaskUtil.maskAccount(anyString())).thenReturn("****12345");
-        lenient().when(secureMaskUtil.maskPhone(anyString())).thenReturn("****5566");
-        lenient().when(secureMaskUtil.maskApprovalCode(anyString())).thenReturn("****1234");
-        lenient().when(secureMaskUtil.maskName(anyString())).thenReturn("T***");
-        lenient().when(secureMaskUtil.maskPayee(anyString())).thenReturn("T***");
+        lenient().when(secureMaskUtil.encryptAccount(anyString())).thenReturn("encrypted_account_12345");
+        lenient().when(secureMaskUtil.encryptPhone(anyString())).thenReturn("encrypted_phone_5566");
+        lenient().when(secureMaskUtil.encryptApprovalCode(anyString())).thenReturn("encrypted_approval_1234");
+        lenient().when(secureMaskUtil.encryptName(anyString())).thenReturn("encrypted_name_test");
+        lenient().when(secureMaskUtil.encryptPayee(anyString())).thenReturn("encrypted_payee_test");
     }
 
     @Test

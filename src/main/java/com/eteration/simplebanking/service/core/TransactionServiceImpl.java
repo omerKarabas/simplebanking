@@ -26,7 +26,7 @@ public class TransactionServiceImpl implements TransactionService {
     @Transactional
     @CacheEvict(value = CacheConstants.BANK_ACCOUNTS_CACHE, key = "#account.accountNumber")
     public TransactionStatusResponse credit(BankAccount account, double amount) {
-        log.debug("[CREDIT] Account: {}, Amount: {}", secureMaskUtil.maskAccount(account.getAccountNumber()), amount);
+        log.debug("[CREDIT] Account: {}, Amount: {}", secureMaskUtil.encryptAccount(account.getAccountNumber()), amount);
         return strategyFactory.executeTransaction(TransactionType.DEPOSIT, account, amount);
     }
 
@@ -34,7 +34,7 @@ public class TransactionServiceImpl implements TransactionService {
     @Transactional
     @CacheEvict(value = CacheConstants.BANK_ACCOUNTS_CACHE, key = "#account.accountNumber")
     public TransactionStatusResponse debit(BankAccount account, double amount) {
-        log.debug("[DEBIT] Account: {}, Amount: {}", secureMaskUtil.maskAccount(account.getAccountNumber()), amount);
+        log.debug("[DEBIT] Account: {}, Amount: {}", secureMaskUtil.encryptAccount(account.getAccountNumber()), amount);
         return strategyFactory.executeTransaction(TransactionType.WITHDRAWAL, account, amount);
     }
 
@@ -43,7 +43,7 @@ public class TransactionServiceImpl implements TransactionService {
     @CacheEvict(value = CacheConstants.BANK_ACCOUNTS_CACHE, key = "#account.accountNumber")
     public TransactionStatusResponse phoneBillPayment(BankAccount account, PhoneCompany phoneCompany, String phoneNumber, double amount) {
         log.debug("[PHONE_BILL] Account: {}, PhoneCompany: {}, Phone: {}, Amount: {}", 
-                secureMaskUtil.maskAccount(account.getAccountNumber()), phoneCompany, secureMaskUtil.maskPhone(phoneNumber), amount);
+                secureMaskUtil.encryptAccount(account.getAccountNumber()), phoneCompany, secureMaskUtil.encryptPhone(phoneNumber), amount);
         return strategyFactory.executeTransaction(TransactionType.PHONE_BILL_PAYMENT, account, phoneCompany, phoneNumber, amount);
     }
 
@@ -52,7 +52,7 @@ public class TransactionServiceImpl implements TransactionService {
     @CacheEvict(value = CacheConstants.BANK_ACCOUNTS_CACHE, key = "#account.accountNumber")
     public TransactionStatusResponse checkPayment(BankAccount account, String payee, double amount) {
         log.debug("[CHECK_PAYMENT] Account: {}, Payee: {}, Amount: {}", 
-                secureMaskUtil.maskAccount(account.getAccountNumber()), secureMaskUtil.maskPayee(payee), amount);
+                secureMaskUtil.encryptAccount(account.getAccountNumber()), secureMaskUtil.encryptPayee(payee), amount);
         return strategyFactory.executeTransaction(TransactionType.CHECK_PAYMENT, account, payee, amount);
     }
 } 

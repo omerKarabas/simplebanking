@@ -37,10 +37,9 @@ logging:
 
 app:
   security:
-    algorithm: ${SECURITY_ALGORITHM}
-    secret-key: ${SECURITY_SECRET_KEY}
+    algorithm: ${SECURITY_ALGORITHM:AES}
+    secret-key: ${SECURITY_SECRET_KEY:SimpleBanking2024!SecretKey32Bytes!!}
 
-# Swagger/OpenAPI Configuration
 springdoc:
   api-docs:
     path: /api-docs

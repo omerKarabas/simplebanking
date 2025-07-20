@@ -63,8 +63,7 @@ public class TransactionStrategyFactory {
             return executeTransactionFlow(strategy, account, operationType, parameters);
         } catch (Exception e) {
             log.debug("[{}][FAILED] Account: {}, Error: {}",
-                    operationType, secureMaskUtil.maskAccount(account.getAccountNumber()), e.getMessage());
-            // i18n hata mesajı ile fırlat
+                    operationType, secureMaskUtil.encryptAccount(account.getAccountNumber()), e.getMessage());
             throw new RuntimeException(MessageKeys.ERROR_INVALID_TRANSACTION.getKey(), e);
         }
     }
@@ -83,7 +82,7 @@ public class TransactionStrategyFactory {
         transactionRepository.save(transaction);
 
         log.debug("[{}][SUCCESS] Account: {}, Amount: {}, ApprovalCode: {}",
-                operationType, secureMaskUtil.maskAccount(account.getAccountNumber()), transaction.getAmount(), secureMaskUtil.maskApprovalCode(approvalCode));
+                operationType, secureMaskUtil.encryptAccount(account.getAccountNumber()), transaction.getAmount(), secureMaskUtil.encryptApprovalCode(approvalCode));
 
         return new TransactionStatusResponse("OK", approvalCode);
     }

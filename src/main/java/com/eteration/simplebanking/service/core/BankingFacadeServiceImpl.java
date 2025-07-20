@@ -26,20 +26,20 @@ public class BankingFacadeServiceImpl implements BankingFacadeService {
 
     @Override
     public BankAccountResponse createBankAccount(String owner, String accountNumber) {
-        log.debug("[CREATE_ACCOUNT] Owner: {}, Account: {}", secureMaskUtil.maskName(owner), secureMaskUtil.maskAccount(accountNumber));
+        log.debug("[CREATE_ACCOUNT] Owner: {}, Account: {}", secureMaskUtil.encryptName(owner), secureMaskUtil.encryptAccount(accountNumber));
         return bankAccountService.createAccount(owner, accountNumber);
     }
 
     @Override
     public BankAccountResponse getBankAccount(String accountNumber) {
-        log.debug("[GET_ACCOUNT] Account: {}", secureMaskUtil.maskAccount(accountNumber));
+        log.debug("[GET_ACCOUNT] Account: {}", secureMaskUtil.encryptAccount(accountNumber));
         return bankAccountService.getAccount(accountNumber);
     }
 
     @Override
     @Transactional
     public TransactionStatusResponse credit(String accountNumber, double amount) {
-        log.debug("[CREDIT] Account: {}, Amount: {}", secureMaskUtil.maskAccount(accountNumber), amount);
+        log.debug("[CREDIT] Account: {}, Amount: {}", secureMaskUtil.encryptAccount(accountNumber), amount);
         BankAccount account = bankAccountService.findAccountByNumber(accountNumber);
         account = bankAccountService.saveAccount(account);
         return transactionService.credit(account, amount);
@@ -48,7 +48,7 @@ public class BankingFacadeServiceImpl implements BankingFacadeService {
     @Override
     @Transactional
     public TransactionStatusResponse debit(String accountNumber, double amount) {
-        log.debug("[DEBIT] Account: {}, Amount: {}", secureMaskUtil.maskAccount(accountNumber), amount);
+        log.debug("[DEBIT] Account: {}, Amount: {}", secureMaskUtil.encryptAccount(accountNumber), amount);
         BankAccount account = bankAccountService.findAccountByNumber(accountNumber);
         account = bankAccountService.saveAccount(account);
         return transactionService.debit(account, amount);
@@ -58,7 +58,7 @@ public class BankingFacadeServiceImpl implements BankingFacadeService {
     @Transactional
     public TransactionStatusResponse phoneBillPayment(String accountNumber, PhoneCompany phoneCompany, String phoneNumber, double amount) {
         log.debug("[PHONE_BILL] Account: {}, PhoneCompany: {}, Phone: {}, Amount: {}", 
-                secureMaskUtil.maskAccount(accountNumber), phoneCompany, secureMaskUtil.maskPhone(phoneNumber), amount);
+                secureMaskUtil.encryptAccount(accountNumber), phoneCompany, secureMaskUtil.encryptPhone(phoneNumber), amount);
         BankAccount account = bankAccountService.findAccountByNumber(accountNumber);
         account = bankAccountService.saveAccount(account);
         return transactionService.phoneBillPayment(account, phoneCompany, phoneNumber, amount);
@@ -68,7 +68,7 @@ public class BankingFacadeServiceImpl implements BankingFacadeService {
     @Transactional
     public TransactionStatusResponse checkPayment(String accountNumber, String payee, double amount) {
         log.debug("[CHECK_PAYMENT] Account: {}, Payee: {}, Amount: {}", 
-                secureMaskUtil.maskAccount(accountNumber), secureMaskUtil.maskPayee(payee), amount);
+                secureMaskUtil.encryptAccount(accountNumber), secureMaskUtil.encryptPayee(payee), amount);
         BankAccount account = bankAccountService.findAccountByNumber(accountNumber);
         account = bankAccountService.saveAccount(account);
         return transactionService.checkPayment(account, payee, amount);

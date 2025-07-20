@@ -12,7 +12,14 @@ public record SecurityConfig(
     public SecurityConfig(String algorithm, String secretKey) {
         this(algorithm, secretKey, new SecretKeySpec(
             normalizeKey(secretKey).getBytes(StandardCharsets.UTF_8), 
-            algorithm));
+            getFullAlgorithmName(algorithm)));
+    }
+    
+    private static String getFullAlgorithmName(String algorithm) {
+        if ("AES".equalsIgnoreCase(algorithm)) {
+            return "AES";
+        }
+        return algorithm;
     }
     
     private static String normalizeKey(String key) {

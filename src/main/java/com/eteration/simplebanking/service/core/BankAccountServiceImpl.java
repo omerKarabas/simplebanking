@@ -41,7 +41,7 @@ public class BankAccountServiceImpl implements BankAccountService {
     @Override
     @Cacheable(value = CacheConstants.BANK_ACCOUNTS_CACHE, key = "#accountNumber")
     public BankAccount findAccountByNumber(String accountNumber) {
-        log.debug("[CACHE_MISS] Account: {}", secureMaskUtil.maskAccount(accountNumber));
+        log.debug("[CACHE_MISS] Account: {}", secureMaskUtil.encryptAccount(accountNumber));
         return bankAccountRepository.findByAccountNumber(accountNumber)
                 .orElseThrow(() -> new AccountNotFoundException(MessageKeys.ACCOUNT_NOT_FOUND_WITH_NUMBER, accountNumber));
     }
@@ -49,7 +49,7 @@ public class BankAccountServiceImpl implements BankAccountService {
     @Override
     @Cacheable(value = CacheConstants.BANK_ACCOUNTS_CACHE, key = "'response:' + #accountNumber")
     public BankAccountResponse getAccount(String accountNumber) {
-        log.debug("[CACHE_MISS_RESPONSE] Account: {}", secureMaskUtil.maskAccount(accountNumber));
+        log.debug("[CACHE_MISS_RESPONSE] Account: {}", secureMaskUtil.encryptAccount(accountNumber));
         BankAccount account = findAccountByNumber(accountNumber);
         return bankAccountMapper.toAccountResponse(account);
     }

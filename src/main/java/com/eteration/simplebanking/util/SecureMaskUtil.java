@@ -1,7 +1,6 @@
 package com.eteration.simplebanking.util;
 
 import com.eteration.simplebanking.model.dto.SecurityConfig;
-import com.eteration.simplebanking.domain.constant.LogConstants;
 import com.eteration.simplebanking.exception.cosntant.MessageKeys;
 import org.springframework.stereotype.Component;
 import javax.crypto.Cipher;
@@ -21,122 +20,71 @@ public class SecureMaskUtil {
         }
     }
     
-    public String maskAccount(String accountNumber) {
-        if (StringUtil.isBlank(accountNumber) || accountNumber.length() < 4) {
-            return LogConstants.DEFAULT_MASK.getValue();
+    private String encrypt(String data) {
+        if (StringUtil.isBlank(data)) {
+            return null;
         }
-        return LogConstants.DEFAULT_MASK.getValue() + accountNumber.substring(accountNumber.length() - 4);
+        try {
+            Cipher cipher = Cipher.getInstance("AES");
+            cipher.init(Cipher.ENCRYPT_MODE, securityConfig.secretKeySpec());
+            byte[] encryptedBytes = cipher.doFinal(data.getBytes(StandardCharsets.UTF_8));
+            return Base64.getEncoder().encodeToString(encryptedBytes);
+        } catch (Exception e) {
+            throw new RuntimeException(MessageKeys.ERROR_ENCRYPTION_FAILED.getKey(), e);
+        }
     }
     
-    public String maskPhone(String phone) {
-        if (StringUtil.isBlank(phone) || phone.length() < 4) {
-            return LogConstants.PHONE_MASK.getValue();
+    private String decrypt(String encryptedData) {
+        if (StringUtil.isBlank(encryptedData)) {
+            return null;
         }
-        return LogConstants.PHONE_MASK.getValue() + phone.substring(phone.length() - 4);
-    }
-    
-    public String maskApprovalCode(String approvalCode) {
-        if (StringUtil.isBlank(approvalCode) || approvalCode.length() < 4) {
-            return LogConstants.APPROVAL_MASK.getValue();
+        try {
+            Cipher cipher = Cipher.getInstance("AES");
+            cipher.init(Cipher.DECRYPT_MODE, securityConfig.secretKeySpec());
+            byte[] decryptedBytes = cipher.doFinal(Base64.getDecoder().decode(encryptedData));
+            return new String(decryptedBytes, StandardCharsets.UTF_8);
+        } catch (Exception e) {
+            throw new RuntimeException(MessageKeys.ERROR_DECRYPTION_FAILED.getKey(), e);
         }
-        return LogConstants.APPROVAL_MASK.getValue() + approvalCode.substring(approvalCode.length() - 4);
-    }
-    
-    public String maskName(String name) {
-        if (StringUtil.isBlank(name)) {
-            return LogConstants.EMPTY_VALUE.getValue();
-        }
-        return name.charAt(0) + LogConstants.NAME_SUFFIX.getValue();
-    }
-    
-    public String maskPayee(String payee) {
-        if (StringUtil.isBlank(payee)) {
-            return LogConstants.EMPTY_VALUE.getValue();
-        }
-        return payee.charAt(0) + LogConstants.NAME_SUFFIX.getValue();
     }
     
     public String encryptAccount(String accountNumber) {
-        if (StringUtil.isBlank(accountNumber)) {
-            return null;
-        }
-        try {
-            Cipher cipher = Cipher.getInstance(securityConfig.algorithm());
-            cipher.init(Cipher.ENCRYPT_MODE, securityConfig.secretKeySpec());
-            byte[] encryptedBytes = cipher.doFinal(accountNumber.getBytes(StandardCharsets.UTF_8));
-            return Base64.getEncoder().encodeToString(encryptedBytes);
-        } catch (Exception e) {
-            throw new RuntimeException(MessageKeys.ERROR_ENCRYPTION_FAILED.getKey(), e);
-        }
+        return encrypt(accountNumber);
     }
     
     public String decryptAccount(String encryptedAccount) {
-        if (StringUtil.isBlank(encryptedAccount)) {
-            return null;
-        }
-        try {
-            Cipher cipher = Cipher.getInstance(securityConfig.algorithm());
-            cipher.init(Cipher.DECRYPT_MODE, securityConfig.secretKeySpec());
-            byte[] decryptedBytes = cipher.doFinal(Base64.getDecoder().decode(encryptedAccount));
-            return new String(decryptedBytes, StandardCharsets.UTF_8);
-        } catch (Exception e) {
-            throw new RuntimeException(MessageKeys.ERROR_DECRYPTION_FAILED.getKey(), e);
-        }
+        return decrypt(encryptedAccount);
     }
     
     public String encryptPhone(String phone) {
-        if (StringUtil.isBlank(phone)) {
-            return null;
-        }
-        try {
-            Cipher cipher = Cipher.getInstance(securityConfig.algorithm());
-            cipher.init(Cipher.ENCRYPT_MODE, securityConfig.secretKeySpec());
-            byte[] encryptedBytes = cipher.doFinal(phone.getBytes(StandardCharsets.UTF_8));
-            return Base64.getEncoder().encodeToString(encryptedBytes);
-        } catch (Exception e) {
-            throw new RuntimeException(MessageKeys.ERROR_ENCRYPTION_FAILED.getKey(), e);
-        }
+        return encrypt(phone);
     }
     
     public String decryptPhone(String encryptedPhone) {
-        if (StringUtil.isBlank(encryptedPhone)) {
-            return null;
-        }
-        try {
-            Cipher cipher = Cipher.getInstance(securityConfig.algorithm());
-            cipher.init(Cipher.DECRYPT_MODE, securityConfig.secretKeySpec());
-            byte[] decryptedBytes = cipher.doFinal(Base64.getDecoder().decode(encryptedPhone));
-            return new String(decryptedBytes, StandardCharsets.UTF_8);
-        } catch (Exception e) {
-            throw new RuntimeException(MessageKeys.ERROR_DECRYPTION_FAILED.getKey(), e);
-        }
+        return decrypt(encryptedPhone);
     }
     
     public String encryptApprovalCode(String approvalCode) {
-        if (StringUtil.isBlank(approvalCode)) {
-            return null;
-        }
-        try {
-            Cipher cipher = Cipher.getInstance(securityConfig.algorithm());
-            cipher.init(Cipher.ENCRYPT_MODE, securityConfig.secretKeySpec());
-            byte[] encryptedBytes = cipher.doFinal(approvalCode.getBytes(StandardCharsets.UTF_8));
-            return Base64.getEncoder().encodeToString(encryptedBytes);
-        } catch (Exception e) {
-            throw new RuntimeException(MessageKeys.ERROR_ENCRYPTION_FAILED.getKey(), e);
-        }
+        return encrypt(approvalCode);
     }
     
     public String decryptApprovalCode(String encryptedApprovalCode) {
-        if (StringUtil.isBlank(encryptedApprovalCode)) {
-            return null;
-        }
-        try {
-            Cipher cipher = Cipher.getInstance(securityConfig.algorithm());
-            cipher.init(Cipher.DECRYPT_MODE, securityConfig.secretKeySpec());
-            byte[] decryptedBytes = cipher.doFinal(Base64.getDecoder().decode(encryptedApprovalCode));
-            return new String(decryptedBytes, StandardCharsets.UTF_8);
-        } catch (Exception e) {
-            throw new RuntimeException(MessageKeys.ERROR_DECRYPTION_FAILED.getKey(), e);
-        }
+        return decrypt(encryptedApprovalCode);
+    }
+    
+    public String encryptName(String name) {
+        return encrypt(name);
+    }
+    
+    public String decryptName(String encryptedName) {
+        return decrypt(encryptedName);
+    }
+    
+    public String encryptPayee(String payee) {
+        return encrypt(payee);
+    }
+    
+    public String decryptPayee(String encryptedPayee) {
+        return decrypt(encryptedPayee);
     }
 } 

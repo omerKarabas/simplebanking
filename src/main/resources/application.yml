@@ -28,4 +28,6 @@ server:
 logging:
   level:
     root: INFO
-    com.eteration.simplebanking: DEBUG 
+    com.eteration.simplebanking: DEBUG
+    org.springframework.web: DEBUG
+    org.springframework.transaction: DEBUG 

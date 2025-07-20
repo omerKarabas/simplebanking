@@ -1,4 +1,4 @@
-package com.eteration.simplebanking.service;
+package com.eteration.simplebanking.service.interfaces;
 
 import com.eteration.simplebanking.domain.entity.BankAccount;
 import com.eteration.simplebanking.model.dto.response.BankAccountResponse;
@@ -9,7 +9,7 @@ public interface BankAccountService {
     
     BankAccountResponse getAccount(String accountNumber);
     
-    void saveAccount(BankAccount account);
+    BankAccount saveAccount(BankAccount account);
 
     BankAccount findAccountByNumber(String accountNumber);
 }

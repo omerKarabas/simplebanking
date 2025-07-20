@@ -1,11 +1,12 @@
-package com.eteration.simplebanking.service.impl;
+package com.eteration.simplebanking.service.core;
 
 import com.eteration.simplebanking.domain.entity.BankAccount;
 import com.eteration.simplebanking.domain.repository.BankAccountRepository;
 import com.eteration.simplebanking.exception.AccountNotFoundException;
+import com.eteration.simplebanking.exception.cosntant.MessageKeys;
 import com.eteration.simplebanking.model.dto.response.BankAccountResponse;
 import com.eteration.simplebanking.model.mapper.BankAccountMapper;
-import com.eteration.simplebanking.service.BankAccountService;
+import com.eteration.simplebanking.service.interfaces.BankAccountService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -34,7 +35,7 @@ public class BankAccountServiceImpl implements BankAccountService {
     @Override
     public BankAccount findAccountByNumber(String accountNumber) {
         return bankAccountRepository.findByAccountNumber(accountNumber)
-                .orElseThrow(() -> new AccountNotFoundException("Account not found: " + accountNumber));
+                .orElseThrow(() -> new AccountNotFoundException(MessageKeys.ACCOUNT_NOT_FOUND_WITH_NUMBER, accountNumber));
     }
 
     @Override
@@ -45,7 +46,7 @@ public class BankAccountServiceImpl implements BankAccountService {
 
 
     @Override
-    public void saveAccount(BankAccount account) {
-        bankAccountRepository.save(account);
+    public BankAccount saveAccount(BankAccount account) {
+        return bankAccountRepository.save(account);
     }
 } 

@@ -3,10 +3,13 @@ package com.eteration.simplebanking.service;
 import com.eteration.simplebanking.domain.entity.BankAccount;
 import com.eteration.simplebanking.domain.entity.transaction.Transaction;
 import com.eteration.simplebanking.domain.enums.PhoneCompany;
+import com.eteration.simplebanking.domain.enums.TransactionType;
 import com.eteration.simplebanking.domain.repository.TransactionRepository;
 import com.eteration.simplebanking.exception.InsufficientBalanceException;
 import com.eteration.simplebanking.model.dto.response.TransactionStatusResponse;
-import com.eteration.simplebanking.service.impl.TransactionServiceImpl;
+import com.eteration.simplebanking.service.core.TransactionServiceImpl;
+import com.eteration.simplebanking.service.strategy.TransactionStrategy;
+import com.eteration.simplebanking.service.strategy.TransactionStrategyFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,7 +25,7 @@ import static org.mockito.Mockito.*;
 class TransactionServiceTest {
 
     @Mock
-    private TransactionRepository transactionRepository;
+    private TransactionStrategyFactory strategyFactory;
 
     @InjectMocks
     private TransactionServiceImpl transactionService;
@@ -42,7 +45,9 @@ class TransactionServiceTest {
     void credit_Success() {
         // Given
         double amount = 500.0;
-        when(transactionRepository.save(any(Transaction.class))).thenReturn(null);
+        TransactionStatusResponse expectedResponse = new TransactionStatusResponse("OK", "test-approval-code");
+        when(strategyFactory.executeTransaction(TransactionType.DEPOSIT, testAccount, amount))
+                .thenReturn(expectedResponse);
 
         // When
         TransactionStatusResponse result = transactionService.credit(testAccount, amount);
@@ -51,16 +56,16 @@ class TransactionServiceTest {
         assertNotNull(result);
         assertEquals("OK", result.status());
         assertNotNull(result.approvalCode());
-        assertEquals(1500.0, testAccount.getBalance(), 0.001);
-        assertEquals(1, testAccount.getTransactions().size());
-        verify(transactionRepository).save(any(Transaction.class));
+        verify(strategyFactory).executeTransaction(TransactionType.DEPOSIT, testAccount, amount);
     }
 
     @Test
     void debit_Success() {
         // Given
         double amount = 300.0;
-        when(transactionRepository.save(any(Transaction.class))).thenReturn(null);
+        TransactionStatusResponse expectedResponse = new TransactionStatusResponse("OK", "test-approval-code");
+        when(strategyFactory.executeTransaction(TransactionType.WITHDRAWAL, testAccount, amount))
+                .thenReturn(expectedResponse);
 
         // When
         TransactionStatusResponse result = transactionService.debit(testAccount, amount);
@@ -69,22 +74,21 @@ class TransactionServiceTest {
         assertNotNull(result);
         assertEquals("OK", result.status());
         assertNotNull(result.approvalCode());
-        assertEquals(700.0, testAccount.getBalance(), 0.001);
-        assertEquals(1, testAccount.getTransactions().size());
-        verify(transactionRepository).save(any(Transaction.class));
+        verify(strategyFactory).executeTransaction(TransactionType.WITHDRAWAL, testAccount, amount);
     }
 
     @Test
     void debit_InsufficientBalance_ThrowsException() {
         // Given
         double amount = 1500.0;
+        when(strategyFactory.executeTransaction(TransactionType.WITHDRAWAL, testAccount, amount))
+                .thenThrow(new RuntimeException("Debit transaction failed: Insufficient balance"));
 
         // When & Then
         assertThrows(RuntimeException.class, () -> {
             transactionService.debit(testAccount, amount);
         });
-        assertEquals(1000.0, testAccount.getBalance(), 0.001); // Balance should remain unchanged
-        verify(transactionRepository, never()).save(any(Transaction.class));
+        verify(strategyFactory).executeTransaction(TransactionType.WITHDRAWAL, testAccount, amount);
     }
 
     @Test
@@ -93,7 +97,9 @@ class TransactionServiceTest {
         PhoneCompany phoneCompany = PhoneCompany.COMPANY_A;
         String phoneNumber = "5423345566";
         double amount = 100.0;
-        when(transactionRepository.save(any(Transaction.class))).thenReturn(null);
+        TransactionStatusResponse expectedResponse = new TransactionStatusResponse("OK", "test-approval-code");
+        when(strategyFactory.executeTransaction(TransactionType.PHONE_BILL_PAYMENT, testAccount, phoneCompany, phoneNumber, amount))
+                .thenReturn(expectedResponse);
 
         // When
         TransactionStatusResponse result = transactionService.phoneBillPayment(testAccount, phoneCompany, phoneNumber, amount);
@@ -102,9 +108,7 @@ class TransactionServiceTest {
         assertNotNull(result);
         assertEquals("OK", result.status());
         assertNotNull(result.approvalCode());
-        assertEquals(900.0, testAccount.getBalance(), 0.001);
-        assertEquals(1, testAccount.getTransactions().size());
-        verify(transactionRepository).save(any(Transaction.class));
+        verify(strategyFactory).executeTransaction(TransactionType.PHONE_BILL_PAYMENT, testAccount, phoneCompany, phoneNumber, amount);
     }
 
     @Test
@@ -113,13 +117,14 @@ class TransactionServiceTest {
         PhoneCompany phoneCompany = PhoneCompany.COMPANY_A;
         String phoneNumber = "5423345566";
         double amount = 1500.0;
+        when(strategyFactory.executeTransaction(TransactionType.PHONE_BILL_PAYMENT, testAccount, phoneCompany, phoneNumber, amount))
+                .thenThrow(new RuntimeException("PhoneBillPayment transaction failed: Insufficient balance"));
 
         // When & Then
         assertThrows(RuntimeException.class, () -> {
             transactionService.phoneBillPayment(testAccount, phoneCompany, phoneNumber, amount);
         });
-        assertEquals(1000.0, testAccount.getBalance(), 0.001); // Balance should remain unchanged
-        verify(transactionRepository, never()).save(any(Transaction.class));
+        verify(strategyFactory).executeTransaction(TransactionType.PHONE_BILL_PAYMENT, testAccount, phoneCompany, phoneNumber, amount);
     }
 
     @Test
@@ -127,7 +132,9 @@ class TransactionServiceTest {
         // Given
         String payee = "Test Payee";
         double amount = 200.0;
-        when(transactionRepository.save(any(Transaction.class))).thenReturn(null);
+        TransactionStatusResponse expectedResponse = new TransactionStatusResponse("OK", "test-approval-code");
+        when(strategyFactory.executeTransaction(TransactionType.CHECK_PAYMENT, testAccount, payee, amount))
+                .thenReturn(expectedResponse);
 
         // When
         TransactionStatusResponse result = transactionService.checkPayment(testAccount, payee, amount);
@@ -136,9 +143,7 @@ class TransactionServiceTest {
         assertNotNull(result);
         assertEquals("OK", result.status());
         assertNotNull(result.approvalCode());
-        assertEquals(800.0, testAccount.getBalance(), 0.001);
-        assertEquals(1, testAccount.getTransactions().size());
-        verify(transactionRepository).save(any(Transaction.class));
+        verify(strategyFactory).executeTransaction(TransactionType.CHECK_PAYMENT, testAccount, payee, amount);
     }
 
     @Test
@@ -146,20 +151,23 @@ class TransactionServiceTest {
         // Given
         String payee = "Test Payee";
         double amount = 1500.0;
+        when(strategyFactory.executeTransaction(TransactionType.CHECK_PAYMENT, testAccount, payee, amount))
+                .thenThrow(new RuntimeException("CheckPayment transaction failed: Insufficient balance"));
 
         // When & Then
         assertThrows(RuntimeException.class, () -> {
             transactionService.checkPayment(testAccount, payee, amount);
         });
-        assertEquals(1000.0, testAccount.getBalance(), 0.001); // Balance should remain unchanged
-        verify(transactionRepository, never()).save(any(Transaction.class));
+        verify(strategyFactory).executeTransaction(TransactionType.CHECK_PAYMENT, testAccount, payee, amount);
     }
 
     @Test
     void credit_ZeroAmount_Success() {
         // Given
         double amount = 0.0;
-        when(transactionRepository.save(any(Transaction.class))).thenReturn(null);
+        TransactionStatusResponse expectedResponse = new TransactionStatusResponse("OK", "test-approval-code");
+        when(strategyFactory.executeTransaction(TransactionType.DEPOSIT, testAccount, amount))
+                .thenReturn(expectedResponse);
 
         // When
         TransactionStatusResponse result = transactionService.credit(testAccount, amount);
@@ -167,15 +175,16 @@ class TransactionServiceTest {
         // Then
         assertNotNull(result);
         assertEquals("OK", result.status());
-        assertEquals(1000.0, testAccount.getBalance(), 0.001); // Balance should remain unchanged
-        assertEquals(1, testAccount.getTransactions().size());
+        verify(strategyFactory).executeTransaction(TransactionType.DEPOSIT, testAccount, amount);
     }
 
     @Test
     void debit_ZeroAmount_Success() {
         // Given
         double amount = 0.0;
-        when(transactionRepository.save(any(Transaction.class))).thenReturn(null);
+        TransactionStatusResponse expectedResponse = new TransactionStatusResponse("OK", "test-approval-code");
+        when(strategyFactory.executeTransaction(TransactionType.WITHDRAWAL, testAccount, amount))
+                .thenReturn(expectedResponse);
 
         // When
         TransactionStatusResponse result = transactionService.debit(testAccount, amount);
@@ -183,7 +192,7 @@ class TransactionServiceTest {
         // Then
         assertNotNull(result);
         assertEquals("OK", result.status());
-        assertEquals(1000.0, testAccount.getBalance(), 0.001); // Balance should remain unchanged
-        assertEquals(1, testAccount.getTransactions().size());
+        verify(strategyFactory).executeTransaction(TransactionType.WITHDRAWAL, testAccount, amount);
     }
+    
 } 

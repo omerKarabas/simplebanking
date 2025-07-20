@@ -1,4 +1,4 @@
-package com.eteration.simplebanking.service;
+package com.eteration.simplebanking.service.interfaces;
 
 import com.eteration.simplebanking.domain.entity.BankAccount;
 import com.eteration.simplebanking.domain.enums.PhoneCompany;

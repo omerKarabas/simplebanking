@@ -3,9 +3,10 @@ package com.eteration.simplebanking.service;
 import com.eteration.simplebanking.domain.entity.BankAccount;
 import com.eteration.simplebanking.domain.repository.BankAccountRepository;
 import com.eteration.simplebanking.exception.AccountNotFoundException;
+import com.eteration.simplebanking.exception.cosntant.MessageKeys;
 import com.eteration.simplebanking.model.dto.response.BankAccountResponse;
 import com.eteration.simplebanking.model.mapper.BankAccountMapper;
-import com.eteration.simplebanking.service.impl.BankAccountServiceImpl;
+import com.eteration.simplebanking.service.core.BankAccountServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -103,7 +104,10 @@ class BankAccountServiceTest {
             bankAccountService.findAccountByNumber(accountNumber);
         });
         
-        assertEquals("Account not found: " + accountNumber, exception.getMessage());
+        assertEquals(MessageKeys.ACCOUNT_NOT_FOUND_WITH_NUMBER.getKey(), exception.getMessage());
+        assertTrue(exception.hasMessageKey());
+        assertEquals(MessageKeys.ACCOUNT_NOT_FOUND_WITH_NUMBER, exception.getMessageKey());
+        assertEquals(accountNumber, exception.getParameters()[0]);
         verify(bankAccountRepository).findByAccountNumber(accountNumber);
     }
 
@@ -135,7 +139,10 @@ class BankAccountServiceTest {
             bankAccountService.getAccount(accountNumber);
         });
         
-        assertEquals("Account not found: " + accountNumber, exception.getMessage());
+        assertEquals(MessageKeys.ACCOUNT_NOT_FOUND_WITH_NUMBER.getKey(), exception.getMessage());
+        assertTrue(exception.hasMessageKey());
+        assertEquals(MessageKeys.ACCOUNT_NOT_FOUND_WITH_NUMBER, exception.getMessageKey());
+        assertEquals(accountNumber, exception.getParameters()[0]);
         verify(bankAccountRepository).findByAccountNumber(accountNumber);
     }
 

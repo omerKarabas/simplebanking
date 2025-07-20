@@ -4,7 +4,11 @@ import com.eteration.simplebanking.model.dto.response.BankAccountResponse;
 import com.eteration.simplebanking.model.dto.response.TransactionStatusResponse;
 import com.eteration.simplebanking.model.dto.request.CreateAccountRequest;
 import com.eteration.simplebanking.model.dto.request.TransactionRequest;
-import com.eteration.simplebanking.service.BankingFacadeService;
+import com.eteration.simplebanking.model.dto.request.PhoneBillPaymentRequest;
+import com.eteration.simplebanking.model.dto.request.CheckPaymentRequest;
+import com.eteration.simplebanking.domain.enums.PhoneCompany;
+
+import com.eteration.simplebanking.service.interfaces.BankingFacadeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -42,6 +46,20 @@ public class BankAccountController {
     @GetMapping("/{accountNumber}")
     public ResponseEntity<BankAccountResponse> getBankAccount(@PathVariable String accountNumber) {
         BankAccountResponse result = bankingFacadeService.getBankAccount(accountNumber);
+        return ResponseEntity.ok(result);
+    }
+
+    @PostMapping("/phone-bill-payment/{accountNumber}")
+    public ResponseEntity<TransactionStatusResponse> phoneBillPayment(@PathVariable String accountNumber,
+                                                                     @RequestBody PhoneBillPaymentRequest request) {
+        TransactionStatusResponse result = bankingFacadeService.phoneBillPayment(accountNumber, request.phoneCompany(), request.phoneNumber(), request.amount());
+        return ResponseEntity.ok(result);
+    }
+
+    @PostMapping("/check-payment/{accountNumber}")
+    public ResponseEntity<TransactionStatusResponse> checkPayment(@PathVariable String accountNumber,
+                                                                 @RequestBody CheckPaymentRequest request) {
+        TransactionStatusResponse result = bankingFacadeService.checkPayment(accountNumber, request.payee(), request.amount());
         return ResponseEntity.ok(result);
     }
 }

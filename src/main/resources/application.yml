@@ -21,6 +21,8 @@ spring:
   h2:
     console:
       enabled: false
+  cache:
+    type: simple
 
 server:
   port: ${SERVER_PORT:8080}
@@ -30,4 +32,5 @@ logging:
     root: INFO
     com.eteration.simplebanking: DEBUG
     org.springframework.web: DEBUG
-    org.springframework.transaction: DEBUG 
+    org.springframework.transaction: DEBUG
+    org.springframework.cache: DEBUG 

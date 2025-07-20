@@ -1,5 +1,6 @@
 package com.eteration.simplebanking.service.core;
 
+import com.eteration.simplebanking.constant.CacheConstants;
 import com.eteration.simplebanking.domain.entity.BankAccount;
 import com.eteration.simplebanking.domain.repository.BankAccountRepository;
 import com.eteration.simplebanking.exception.AccountNotFoundException;
@@ -9,6 +10,8 @@ import com.eteration.simplebanking.model.mapper.BankAccountMapper;
 import com.eteration.simplebanking.service.interfaces.BankAccountService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +25,7 @@ public class BankAccountServiceImpl implements BankAccountService {
 
     @Override
     @Transactional
+    @CacheEvict(value = CacheConstants.BANK_ACCOUNTS_CACHE, allEntries = true)
     public BankAccountResponse createAccount(String owner, String accountNumber) {
         BankAccount account = BankAccount.builder()
                 .owner(owner)
@@ -33,19 +37,24 @@ public class BankAccountServiceImpl implements BankAccountService {
     }
 
     @Override
+    @Cacheable(value = CacheConstants.BANK_ACCOUNTS_CACHE, key = "#accountNumber")
     public BankAccount findAccountByNumber(String accountNumber) {
+        log.debug("Cache miss for account number: {}", accountNumber);
         return bankAccountRepository.findByAccountNumber(accountNumber)
                 .orElseThrow(() -> new AccountNotFoundException(MessageKeys.ACCOUNT_NOT_FOUND_WITH_NUMBER, accountNumber));
     }
 
     @Override
+    @Cacheable(value = CacheConstants.BANK_ACCOUNTS_CACHE, key = "'response:' + #accountNumber")
     public BankAccountResponse getAccount(String accountNumber) {
+        log.debug("Cache miss for account response: {}", accountNumber);
         BankAccount account = findAccountByNumber(accountNumber);
         return bankAccountMapper.toAccountResponse(account);
     }
 
 
     @Override
+    @CacheEvict(value = CacheConstants.BANK_ACCOUNTS_CACHE, key = "#account.accountNumber")
     public BankAccount saveAccount(BankAccount account) {
         return bankAccountRepository.save(account);
     }

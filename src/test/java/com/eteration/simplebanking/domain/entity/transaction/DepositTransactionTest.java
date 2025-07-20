@@ -30,7 +30,6 @@ class DepositTransactionTest {
 
     @Test
     void testDepositTransactionCreation() {
-        // Then
         assertNotNull(depositTransaction);
         assertEquals(0.0, depositTransaction.getAmount(), 0.001);
         assertNull(depositTransaction.getDate());
@@ -40,60 +39,48 @@ class DepositTransactionTest {
 
     @Test
     void testDepositTransactionExecute() throws InsufficientBalanceException {
-        // Given
         double initialBalance = bankAccount.getBalance();
         double depositAmount = 500.0;
         depositTransaction.setAmount(depositAmount);
 
-        // When
         depositTransaction.execute(bankAccount);
 
-        // Then
         assertEquals(initialBalance + depositAmount, bankAccount.getBalance(), 0.001);
     }
 
     @Test
     void testDepositTransactionExecuteWithZeroAmount() throws InsufficientBalanceException {
-        // Given
         double initialBalance = bankAccount.getBalance();
         double depositAmount = 0.0;
         depositTransaction.setAmount(depositAmount);
 
-        // When
         depositTransaction.execute(bankAccount);
 
-        // Then
         assertEquals(initialBalance, bankAccount.getBalance(), 0.001);
     }
 
     @Test
     void testDepositTransactionExecuteWithLargeAmount() throws InsufficientBalanceException {
-        // Given
         double initialBalance = bankAccount.getBalance();
         double depositAmount = 10000.0;
         depositTransaction.setAmount(depositAmount);
 
-        // When
         depositTransaction.execute(bankAccount);
 
-        // Then
         assertEquals(initialBalance + depositAmount, bankAccount.getBalance(), 0.001);
     }
 
     @Test
     void testDepositTransactionSettersAndGetters() {
-        // Given
         double amount = 500.0;
         LocalDateTime date = LocalDateTime.now();
         String approvalCode = UUID.randomUUID().toString();
 
-        // When
         depositTransaction.setAmount(amount);
         depositTransaction.setDate(date);
         depositTransaction.setAccount(bankAccount);
         depositTransaction.setApprovalCode(approvalCode);
 
-        // Then
         assertEquals(amount, depositTransaction.getAmount(), 0.001);
         assertEquals(date, depositTransaction.getDate());
         assertEquals(bankAccount, depositTransaction.getAccount());
@@ -102,7 +89,6 @@ class DepositTransactionTest {
 
     @Test
     void testDepositTransactionEqualsAndHashCode() {
-        // Given
         DepositTransaction transaction1 = new DepositTransaction();
         DepositTransaction transaction2 = new DepositTransaction();
         DepositTransaction transaction3 = new DepositTransaction();
@@ -111,7 +97,6 @@ class DepositTransactionTest {
         transaction2.setId(1L);
         transaction3.setId(2L);
 
-        // When & Then
         assertEquals(transaction1, transaction2);
         assertEquals(transaction1.hashCode(), transaction2.hashCode());
 
@@ -121,42 +106,33 @@ class DepositTransactionTest {
 
     @Test
     void testDepositTransactionToString() {
-        // Given
         depositTransaction.setId(1L);
         depositTransaction.setAmount(500.0);
         depositTransaction.setDate(LocalDateTime.now());
 
-        // When
         String toString = depositTransaction.toString();
 
-        // Then
         assertNotNull(toString);
-        // Lombok toString sadece sınıf adını içerir
         assertTrue(toString.contains("DepositTransaction"));
     }
 
     @Test
     void testDepositTransactionWithNegativeAmount() throws InsufficientBalanceException {
-        // Given
         double initialBalance = bankAccount.getBalance();
         double depositAmount = -100.0;
         depositTransaction.setAmount(depositAmount);
 
-        // When
         depositTransaction.execute(bankAccount);
 
-        // Then
         assertEquals(initialBalance + depositAmount, bankAccount.getBalance(), 0.001);
     }
 
     @Test
     void testDepositTransactionMultipleExecutions() throws InsufficientBalanceException {
-        // Given
         double initialBalance = bankAccount.getBalance();
         double depositAmount1 = 500.0;
         double depositAmount2 = 300.0;
 
-        // When
         depositTransaction.setAmount(depositAmount1);
         depositTransaction.execute(bankAccount);
 
@@ -164,16 +140,13 @@ class DepositTransactionTest {
         depositTransaction2.setAmount(depositAmount2);
         depositTransaction2.execute(bankAccount);
 
-        // Then
         assertEquals(initialBalance + depositAmount1 + depositAmount2, bankAccount.getBalance(), 0.001);
     }
 
     @Test
     void testDepositTransactionWithNullAccount() {
-        // Given
         depositTransaction.setAmount(500.0);
 
-        // When & Then
         assertThrows(NullPointerException.class, () -> {
             depositTransaction.execute(null);
         });
@@ -181,15 +154,12 @@ class DepositTransactionTest {
 
     @Test
     void testDepositTransactionWithDecimalAmount() throws InsufficientBalanceException {
-        // Given
         double initialBalance = bankAccount.getBalance();
         double depositAmount = 123.45;
         depositTransaction.setAmount(depositAmount);
 
-        // When
         depositTransaction.execute(bankAccount);
 
-        // Then
         assertEquals(initialBalance + depositAmount, bankAccount.getBalance(), 0.001);
     }
 } 

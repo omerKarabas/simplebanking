@@ -22,4 +22,9 @@ spring:
     type: none
   autoconfigure:
     exclude:
-      - org.springframework.boot.autoconfigure.cache.CacheAutoConfiguration 
+      - org.springframework.boot.autoconfigure.cache.CacheAutoConfiguration
+
+app:
+  security:
+    algorithm: AES
+    secret-key: SimpleBanking2024!SecretKey32BytesLong123456 

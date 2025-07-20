@@ -1,6 +1,6 @@
-package com.eteration.simplebanking.domain.validation.annotations;
+package com.eteration.simplebanking.domain.validation.annotation;
 
-import com.eteration.simplebanking.domain.validation.validators.PositiveAmountValidator;
+import com.eteration.simplebanking.domain.validation.validator.PositiveAmountValidator;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 import java.lang.annotation.*;

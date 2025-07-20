@@ -1,9 +1,5 @@
-package com.eteration.simplebanking.domain.constants;
+package com.eteration.simplebanking.domain.constant;
 
-/**
- * Validation için regex pattern'leri
- * Temizleme işlemleri artık StringUtil sınıfında yapılıyor
- */
 public final class ValidationRegex {
     
     public static final String ACCOUNT_NUMBER_PATTERN = "^\\d{10,16}$";

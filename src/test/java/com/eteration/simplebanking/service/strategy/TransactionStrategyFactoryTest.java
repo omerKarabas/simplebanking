@@ -2,6 +2,7 @@ package com.eteration.simplebanking.service.strategy;
 
 import com.eteration.simplebanking.domain.enums.TransactionType;
 import com.eteration.simplebanking.exception.StrategyNotFoundException;
+import com.eteration.simplebanking.util.SecureMaskUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -32,6 +33,9 @@ class TransactionStrategyFactoryTest {
     @Mock
     private com.eteration.simplebanking.domain.repository.TransactionRepository transactionRepository;
 
+    @Mock
+    private SecureMaskUtil secureMaskUtil;
+
     private TransactionStrategyFactory factory;
 
     @BeforeEach
@@ -46,7 +50,7 @@ class TransactionStrategyFactoryTest {
                 depositStrategy, withdrawalStrategy, phoneBillStrategy, checkStrategy
         );
 
-        factory = new TransactionStrategyFactory(strategies, transactionRepository);
+        factory = new TransactionStrategyFactory(strategies, transactionRepository, secureMaskUtil);
     }
 
     @Test
@@ -100,7 +104,7 @@ class TransactionStrategyFactoryTest {
             List<TransactionStrategy> strategiesWithoutDeposit = Arrays.asList(
                     withdrawalStrategy, phoneBillStrategy, checkStrategy
             );
-            TransactionStrategyFactory factoryWithoutDeposit = new TransactionStrategyFactory(strategiesWithoutDeposit, transactionRepository);
+            TransactionStrategyFactory factoryWithoutDeposit = new TransactionStrategyFactory(strategiesWithoutDeposit, transactionRepository, secureMaskUtil);
             factoryWithoutDeposit.getStrategy(TransactionType.DEPOSIT);
         });
     }
@@ -118,7 +122,7 @@ class TransactionStrategyFactoryTest {
     void hasStrategy_NonExistingStrategy_ReturnsFalse() {
         // Given
         List<TransactionStrategy> limitedStrategies = Arrays.asList(depositStrategy);
-        TransactionStrategyFactory limitedFactory = new TransactionStrategyFactory(limitedStrategies, transactionRepository);
+        TransactionStrategyFactory limitedFactory = new TransactionStrategyFactory(limitedStrategies, transactionRepository, secureMaskUtil);
 
         // When
         boolean result = limitedFactory.hasStrategy(TransactionType.WITHDRAWAL);

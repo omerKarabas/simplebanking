@@ -7,20 +7,14 @@ import com.eteration.simplebanking.model.dto.request.CreateAccountRequest;
 import com.eteration.simplebanking.model.dto.request.TransactionRequest;
 import com.eteration.simplebanking.model.dto.response.BankAccountResponse;
 import com.eteration.simplebanking.model.dto.response.TransactionStatusResponse;
-import com.eteration.simplebanking.domain.enums.TransactionType;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.eteration.simplebanking.TestConstants.*;
 
-/**
- * Test verilerini oluşturmak için kullanılan builder sınıfı.
- * Bu sınıf sayesinde test verilerini tutarlı ve tekrar kullanılabilir şekilde oluşturabiliriz.
- */
 public final class TestDataBuilder {
     
-    // BankAccount Builder Methods
     public static BankAccount createTestAccount() {
         return BankAccount.builder()
                 .accountNumber(TEST_ACCOUNT_NUMBER)
@@ -61,7 +55,6 @@ public final class TestDataBuilder {
                 .build();
     }
     
-    // Transaction Builder Methods
     public static DepositTransaction createDepositTransaction(double amount) {
         DepositTransaction transaction = new DepositTransaction();
         transaction.setAmount(amount);
@@ -83,48 +76,46 @@ public final class TestDataBuilder {
         return transaction;
     }
     
-    // Request Builder Methods
     public static CreateAccountRequest createAccountRequest() {
-        return new CreateAccountRequest(TEST_OWNER_NAME, TEST_ACCOUNT_NUMBER, TEST_PHONE_NUMBER);
+        return new CreateAccountRequest(TEST_OWNER_NAME, TEST_ACCOUNT_NUMBER);
     }
     
     public static CreateAccountRequest createAccountRequestWithCustomData(String owner, String accountNumber) {
-        return new CreateAccountRequest(owner, accountNumber, TEST_PHONE_NUMBER);
+        return new CreateAccountRequest(owner, accountNumber);
     }
     
     public static CreateAccountRequest createAccountRequest2() {
-        return new CreateAccountRequest(TEST_OWNER_NAME_2, TEST_ACCOUNT_NUMBER_2, TEST_PHONE_NUMBER_2);
+        return new CreateAccountRequest(TEST_OWNER_NAME_2, TEST_ACCOUNT_NUMBER_2);
     }
     
     public static TransactionRequest createTransactionRequest(double amount) {
-        return new TransactionRequest(TransactionType.DEPOSIT, amount);
+        return new TransactionRequest(amount);
     }
     
     public static TransactionRequest createSmallAmountRequest() {
-        return new TransactionRequest(TransactionType.DEPOSIT, SMALL_AMOUNT);
+        return new TransactionRequest(SMALL_AMOUNT);
     }
     
     public static TransactionRequest createMediumAmountRequest() {
-        return new TransactionRequest(TransactionType.DEPOSIT, MEDIUM_AMOUNT);
+        return new TransactionRequest(MEDIUM_AMOUNT);
     }
     
     public static TransactionRequest createLargeAmountRequest() {
-        return new TransactionRequest(TransactionType.DEPOSIT, LARGE_AMOUNT);
+        return new TransactionRequest(LARGE_AMOUNT);
     }
     
     public static TransactionRequest createCreditAmountRequest() {
-        return new TransactionRequest(TransactionType.DEPOSIT, CREDIT_AMOUNT);
+        return new TransactionRequest(CREDIT_AMOUNT);
     }
     
     public static TransactionRequest createDebitAmountRequest() {
-        return new TransactionRequest(TransactionType.WITHDRAWAL, DEBIT_AMOUNT);
+        return new TransactionRequest(DEBIT_AMOUNT);
     }
     
     public static TransactionRequest createInsufficientAmountRequest() {
-        return new TransactionRequest(TransactionType.WITHDRAWAL, INSUFFICIENT_AMOUNT);
+        return new TransactionRequest(INSUFFICIENT_AMOUNT);
     }
     
-    // Response Builder Methods
     public static BankAccountResponse createBankAccountResponse() {
         return new BankAccountResponse(TEST_ACCOUNT_NUMBER, TEST_OWNER_NAME, INITIAL_BALANCE, null, null);
     }
@@ -153,7 +144,6 @@ public final class TestDataBuilder {
         return new TransactionStatusResponse(status, approvalCode);
     }
     
-    // List Builder Methods
     public static List<BankAccount> createTestAccountList() {
         List<BankAccount> accounts = new ArrayList<>();
         accounts.add(createTestAccount());
@@ -169,7 +159,6 @@ public final class TestDataBuilder {
         return requests;
     }
     
-    // Utility class - instantiation yasak
     private TestDataBuilder() {
         throw new UnsupportedOperationException("Utility class cannot be instantiated");
     }

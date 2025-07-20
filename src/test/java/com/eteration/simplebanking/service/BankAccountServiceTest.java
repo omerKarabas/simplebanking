@@ -7,6 +7,7 @@ import com.eteration.simplebanking.exception.cosntant.MessageKeys;
 import com.eteration.simplebanking.model.dto.response.BankAccountResponse;
 import com.eteration.simplebanking.model.mapper.BankAccountMapper;
 import com.eteration.simplebanking.service.core.BankAccountServiceImpl;
+import com.eteration.simplebanking.util.SecureMaskUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,6 +20,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -29,6 +31,9 @@ class BankAccountServiceTest {
 
     @Mock
     private BankAccountMapper bankAccountMapper;
+
+    @Mock
+    private SecureMaskUtil secureMaskUtil;
 
     @InjectMocks
     private BankAccountServiceImpl bankAccountService;
@@ -51,6 +56,13 @@ class BankAccountServiceTest {
                 LocalDateTime.now(),
                 null
         );
+
+        // Mock SecureMaskUtil methods
+        lenient().when(secureMaskUtil.encryptAccount(anyString())).thenReturn("encrypted_account_12345");
+        lenient().when(secureMaskUtil.encryptPhone(anyString())).thenReturn("encrypted_phone_5566");
+        lenient().when(secureMaskUtil.encryptApprovalCode(anyString())).thenReturn("encrypted_approval_1234");
+        lenient().when(secureMaskUtil.encryptName(anyString())).thenReturn("encrypted_name_test");
+        lenient().when(secureMaskUtil.encryptPayee(anyString())).thenReturn("encrypted_payee_test");
     }
 
     @Test

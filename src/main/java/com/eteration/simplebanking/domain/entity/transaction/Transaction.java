@@ -1,7 +1,7 @@
 package com.eteration.simplebanking.domain.entity.transaction;
 
 import com.eteration.simplebanking.domain.entity.BaseEntity;
-import com.eteration.simplebanking.domain.validation.annotations.PositiveAmount;
+import com.eteration.simplebanking.domain.validation.annotation.PositiveAmount;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;

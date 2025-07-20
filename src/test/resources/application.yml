@@ -17,4 +17,9 @@ spring:
     console:
       enabled: true
   profiles:
-    active: test 
+    active: test
+  cache:
+    type: none
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.cache.CacheAutoConfiguration 

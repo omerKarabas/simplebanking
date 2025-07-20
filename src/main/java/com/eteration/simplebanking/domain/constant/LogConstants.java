@@ -1,4 +1,4 @@
-package com.eteration.simplebanking.constant;
+package com.eteration.simplebanking.domain.constant;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

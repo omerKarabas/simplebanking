@@ -14,7 +14,7 @@ public class WithdrawalTransactionStrategy implements TransactionStrategy {
     @Override
     public Transaction createTransaction(Object... parameters) {
         if (parameters.length < 1 || !(parameters[0] instanceof Double)) {
-            throw new IllegalArgumentException("Amount parameter is required for withdrawal transaction");
+            throw new IllegalArgumentException(com.eteration.simplebanking.exception.cosntant.MessageKeys.ERROR_INVALID_TRANSACTION.getKey());
         }
         
         double amount = (Double) parameters[0];

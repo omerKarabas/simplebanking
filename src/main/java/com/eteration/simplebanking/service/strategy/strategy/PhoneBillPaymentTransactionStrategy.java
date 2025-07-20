@@ -13,19 +13,19 @@ public class PhoneBillPaymentTransactionStrategy implements TransactionStrategy 
     @Override
     public Transaction createTransaction(Object... parameters) {
         if (parameters.length < 3) {
-            throw new IllegalArgumentException("PhoneCompany, phoneNumber, and amount parameters are required for phone bill payment transaction");
+            throw new IllegalArgumentException(com.eteration.simplebanking.exception.cosntant.MessageKeys.ERROR_INVALID_TRANSACTION.getKey());
         }
         
-        if (!(parameters[0] instanceof PhoneCompany phoneCompany)) {
-            throw new IllegalArgumentException("First parameter must be PhoneCompany enum");
+        if (!(parameters[0] instanceof com.eteration.simplebanking.domain.enums.PhoneCompany phoneCompany)) {
+            throw new IllegalArgumentException(com.eteration.simplebanking.exception.cosntant.MessageKeys.ERROR_INVALID_TRANSACTION.getKey());
         }
         
         if (!(parameters[1] instanceof String phoneNumber)) {
-            throw new IllegalArgumentException("Second parameter must be String (phone number)");
+            throw new IllegalArgumentException(com.eteration.simplebanking.exception.cosntant.MessageKeys.ERROR_INVALID_TRANSACTION.getKey());
         }
         
         if (!(parameters[2] instanceof Double)) {
-            throw new IllegalArgumentException("Third parameter must be Double (amount)");
+            throw new IllegalArgumentException(com.eteration.simplebanking.exception.cosntant.MessageKeys.ERROR_INVALID_TRANSACTION.getKey());
         }
 
         double amount = (Double) parameters[2];

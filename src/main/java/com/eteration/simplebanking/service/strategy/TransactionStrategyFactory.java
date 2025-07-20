@@ -9,7 +9,7 @@ import com.eteration.simplebanking.exception.StrategyNotFoundException;
 import com.eteration.simplebanking.exception.TransactionValidationException;
 import com.eteration.simplebanking.exception.cosntant.MessageKeys;
 import com.eteration.simplebanking.model.dto.response.TransactionStatusResponse;
-import com.eteration.simplebanking.util.MaskUtil;
+import com.eteration.simplebanking.util.SecureMaskUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -25,9 +25,11 @@ public class TransactionStrategyFactory {
 
     private final Map<TransactionType, TransactionStrategy> strategies;
     private final TransactionRepository transactionRepository;
+    private final SecureMaskUtil secureMaskUtil;
 
     public TransactionStrategyFactory(List<TransactionStrategy> strategyList,
-                                      TransactionRepository transactionRepository) {
+                                      TransactionRepository transactionRepository,
+                                      SecureMaskUtil secureMaskUtil) {
         this.strategies = strategyList.stream()
                 .collect(Collectors.toMap(
                         TransactionStrategy::getTransactionType,
@@ -35,6 +37,7 @@ public class TransactionStrategyFactory {
                 ));
 
         this.transactionRepository = transactionRepository;
+        this.secureMaskUtil = secureMaskUtil;
 
         log.debug("Initialized TransactionStrategyFactory with {} strategies: {}",
                 strategies.size(), strategies.keySet());
@@ -60,8 +63,9 @@ public class TransactionStrategyFactory {
             return executeTransactionFlow(strategy, account, operationType, parameters);
         } catch (Exception e) {
             log.debug("[{}][FAILED] Account: {}, Error: {}",
-                    operationType, MaskUtil.maskAccount(account.getAccountNumber()), e.getMessage());
-            throw new RuntimeException(operationType + " transaction failed: " + e.getMessage(), e);
+                    operationType, secureMaskUtil.maskAccount(account.getAccountNumber()), e.getMessage());
+            // i18n hata mesajı ile fırlat
+            throw new RuntimeException(MessageKeys.ERROR_INVALID_TRANSACTION.getKey(), e);
         }
     }
 
@@ -79,7 +83,7 @@ public class TransactionStrategyFactory {
         transactionRepository.save(transaction);
 
         log.debug("[{}][SUCCESS] Account: {}, Amount: {}, ApprovalCode: {}",
-                operationType, MaskUtil.maskAccount(account.getAccountNumber()), transaction.getAmount(), MaskUtil.maskApprovalCode(approvalCode));
+                operationType, secureMaskUtil.maskAccount(account.getAccountNumber()), transaction.getAmount(), secureMaskUtil.maskApprovalCode(approvalCode));
 
         return new TransactionStatusResponse("OK", approvalCode);
     }

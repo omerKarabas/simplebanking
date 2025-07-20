@@ -10,9 +10,6 @@ public record CreateAccountRequest(
     @Size(min = 2, max = 100, message = "{validation.owner.size}")
     String owner,
 
-    @AccountNumber(checkUniqueness = true, required = true)
-    String accountNumber,
-
-    @PhoneNumber(message = "{validation.phone.number.invalid}")
-    String phoneNumber
+    @AccountNumber()
+    String accountNumber
 ) {} 

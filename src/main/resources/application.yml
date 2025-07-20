@@ -33,4 +33,9 @@ logging:
     com.eteration.simplebanking: DEBUG
     org.springframework.web: DEBUG
     org.springframework.transaction: DEBUG
-    org.springframework.cache: DEBUG 
+    org.springframework.cache: DEBUG
+
+app:
+  security:
+    algorithm: ${SECURITY_ALGORITHM}
+    secret-key: ${SECURITY_SECRET_KEY}

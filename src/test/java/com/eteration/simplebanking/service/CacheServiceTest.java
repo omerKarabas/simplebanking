@@ -1,6 +1,6 @@
 package com.eteration.simplebanking.service;
 
-import com.eteration.simplebanking.constant.CacheConstants;
+import com.eteration.simplebanking.domain.constant.CacheConstants;
 import com.eteration.simplebanking.model.dto.response.BankAccountResponse;
 import com.eteration.simplebanking.service.interfaces.BankAccountService;
 import org.junit.jupiter.api.Test;

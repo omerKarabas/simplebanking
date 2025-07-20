@@ -1,5 +1,6 @@
 package com.eteration.simplebanking.constant;
 
+import com.eteration.simplebanking.domain.constant.LogConstants;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 

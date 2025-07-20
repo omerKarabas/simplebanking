@@ -1,6 +1,6 @@
 package com.eteration.simplebanking.config;
 
-import com.eteration.simplebanking.constant.CacheConstants;
+import com.eteration.simplebanking.domain.constant.CacheConstants;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.concurrent.ConcurrentMapCacheManager;

@@ -1,6 +1,6 @@
 package com.eteration.simplebanking.domain.repository;
 
-import com.eteration.simplebanking.constant.CacheConstants;
+import com.eteration.simplebanking.domain.constant.CacheConstants;
 import com.eteration.simplebanking.domain.entity.BankAccount;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.repository.JpaRepository;

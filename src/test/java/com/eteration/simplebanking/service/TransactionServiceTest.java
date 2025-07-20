@@ -10,6 +10,7 @@ import com.eteration.simplebanking.model.dto.response.TransactionStatusResponse;
 import com.eteration.simplebanking.service.core.TransactionServiceImpl;
 import com.eteration.simplebanking.service.strategy.TransactionStrategy;
 import com.eteration.simplebanking.service.strategy.TransactionStrategyFactory;
+import com.eteration.simplebanking.util.SecureMaskUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,6 +20,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -26,6 +28,9 @@ class TransactionServiceTest {
 
     @Mock
     private TransactionStrategyFactory strategyFactory;
+
+    @Mock
+    private SecureMaskUtil secureMaskUtil;
 
     @InjectMocks
     private TransactionServiceImpl transactionService;
@@ -39,6 +44,13 @@ class TransactionServiceTest {
                 .accountNumber("12345")
                 .balance(1000.0)
                 .build();
+
+        // Mock SecureMaskUtil methods
+        lenient().when(secureMaskUtil.maskAccount(anyString())).thenReturn("****12345");
+        lenient().when(secureMaskUtil.maskPhone(anyString())).thenReturn("****5566");
+        lenient().when(secureMaskUtil.maskApprovalCode(anyString())).thenReturn("****1234");
+        lenient().when(secureMaskUtil.maskName(anyString())).thenReturn("T***");
+        lenient().when(secureMaskUtil.maskPayee(anyString())).thenReturn("T***");
     }
 
     @Test

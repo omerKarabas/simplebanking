@@ -196,8 +196,14 @@ public class GlobalExceptionHandler {
         ex.getBindingResult().getAllErrors().forEach(error -> {
             String fieldName = ((FieldError) error).getField();
             String errorMessage = error.getDefaultMessage();
-            
-            String i18nMessage = resolveValidationMessage(errorMessage);
+
+            String i18nMessage;
+            if (errorMessage != null && errorMessage.startsWith("{") && errorMessage.endsWith("}")) {
+                String key = errorMessage.substring(1, errorMessage.length() - 1);
+                i18nMessage = messageSource.getMessage(key, null, LocaleContextHolder.getLocale());
+            } else {
+                i18nMessage = errorMessage;
+            }
             fieldErrors.put(fieldName, i18nMessage);
         });
 

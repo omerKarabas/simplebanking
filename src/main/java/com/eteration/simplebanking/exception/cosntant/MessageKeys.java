@@ -41,7 +41,10 @@ public enum MessageKeys {
     INSUFFICIENT_BALANCE_FOR_CHECK_PAYMENT("error.insufficient.balance.check.payment"),
     ACCOUNT_NOT_FOUND_WITH_NUMBER("error.account.not.found.with.number"),
     
-    STRATEGY_NOT_FOUND("error.strategy.not.found");
+    STRATEGY_NOT_FOUND("error.strategy.not.found"),
+    
+    ERROR_ENCRYPTION_FAILED("error.encryption.failed"),
+    ERROR_DECRYPTION_FAILED("error.decryption.failed");
 
     private final String key;
 } 

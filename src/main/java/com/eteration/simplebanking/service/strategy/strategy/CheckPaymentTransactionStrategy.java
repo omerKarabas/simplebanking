@@ -12,18 +12,17 @@ public class CheckPaymentTransactionStrategy implements TransactionStrategy {
     @Override
     public Transaction createTransaction(Object... parameters) {
         if (parameters.length < 2) {
-            throw new IllegalArgumentException("Payee and amount parameters are required for check payment transaction");
+            throw new IllegalArgumentException(com.eteration.simplebanking.exception.cosntant.MessageKeys.ERROR_INVALID_TRANSACTION.getKey());
         }
         
-        if (!(parameters[0] instanceof String)) {
-            throw new IllegalArgumentException("First parameter must be String (payee)");
+        if (!(parameters[0] instanceof String payee)) {
+            throw new IllegalArgumentException(com.eteration.simplebanking.exception.cosntant.MessageKeys.ERROR_INVALID_TRANSACTION.getKey());
         }
         
         if (!(parameters[1] instanceof Double)) {
-            throw new IllegalArgumentException("Second parameter must be Double (amount)");
+            throw new IllegalArgumentException(com.eteration.simplebanking.exception.cosntant.MessageKeys.ERROR_INVALID_TRANSACTION.getKey());
         }
-        
-        String payee = (String) parameters[0];
+
         double amount = (Double) parameters[1];
         
         return new CheckTransaction(payee, amount);

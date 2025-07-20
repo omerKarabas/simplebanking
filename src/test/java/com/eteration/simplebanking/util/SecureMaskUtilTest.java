@@ -1,60 +1,67 @@
 package com.eteration.simplebanking.util;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.TestPropertySource;
 import static org.junit.jupiter.api.Assertions.*;
 
+@SpringBootTest
 class SecureMaskUtilTest {
+
+    @Autowired
+    private SecureMaskUtil secureMaskUtil;
 
     @Test
     void testMaskAccount() {
-        assertEquals("****", SecureMaskUtil.maskAccount(null));
-        assertEquals("****", SecureMaskUtil.maskAccount(""));
-        assertEquals("****", SecureMaskUtil.maskAccount("123"));
-        assertEquals("****1234", SecureMaskUtil.maskAccount("12345678901234"));
-        assertEquals("****5678", SecureMaskUtil.maskAccount("12345678"));
+        assertEquals("****", secureMaskUtil.maskAccount(null));
+        assertEquals("****", secureMaskUtil.maskAccount(""));
+        assertEquals("****", secureMaskUtil.maskAccount("123"));
+        assertEquals("****1234", secureMaskUtil.maskAccount("12345678901234"));
+        assertEquals("****5678", secureMaskUtil.maskAccount("12345678"));
     }
 
     @Test
     void testMaskPhone() {
-        assertEquals("*****", SecureMaskUtil.maskPhone(null));
-        assertEquals("*****", SecureMaskUtil.maskPhone(""));
-        assertEquals("*****", SecureMaskUtil.maskPhone("123"));
-        assertEquals("*****5678", SecureMaskUtil.maskPhone("55512345678"));
-        assertEquals("*****1234", SecureMaskUtil.maskPhone("12345678901234"));
+        assertEquals("*****", secureMaskUtil.maskPhone(null));
+        assertEquals("*****", secureMaskUtil.maskPhone(""));
+        assertEquals("*****", secureMaskUtil.maskPhone("123"));
+        assertEquals("*****5678", secureMaskUtil.maskPhone("55512345678"));
+        assertEquals("*****1234", secureMaskUtil.maskPhone("12345678901234"));
     }
 
     @Test
     void testMaskApprovalCode() {
-        assertEquals("****", SecureMaskUtil.maskApprovalCode(null));
-        assertEquals("****", SecureMaskUtil.maskApprovalCode(""));
-        assertEquals("****", SecureMaskUtil.maskApprovalCode("123"));
-        assertEquals("****abcd", SecureMaskUtil.maskApprovalCode("67f1aada-637d-4469-a650-3fb6352527ba"));
-        assertEquals("****1234", SecureMaskUtil.maskApprovalCode("test-approval-code-1234"));
+        assertEquals("****", secureMaskUtil.maskApprovalCode(null));
+        assertEquals("****", secureMaskUtil.maskApprovalCode(""));
+        assertEquals("****", secureMaskUtil.maskApprovalCode("123"));
+        assertEquals("****27ba", secureMaskUtil.maskApprovalCode("67f1aada-637d-4469-a650-3fb6352527ba"));
+        assertEquals("****1234", secureMaskUtil.maskApprovalCode("test-approval-code-1234"));
     }
 
     @Test
     void testMaskName() {
-        assertEquals("-", SecureMaskUtil.maskName(null));
-        assertEquals("-", SecureMaskUtil.maskName(""));
-        assertEquals("J.", SecureMaskUtil.maskName("John"));
-        assertEquals("K.", SecureMaskUtil.maskName("Kerem Karaca"));
-        assertEquals("J.", SecureMaskUtil.maskName("José María García-López"));
+        assertEquals("-", secureMaskUtil.maskName(null));
+        assertEquals("-", secureMaskUtil.maskName(""));
+        assertEquals("J.", secureMaskUtil.maskName("John"));
+        assertEquals("K.", secureMaskUtil.maskName("Kerem Karaca"));
+        assertEquals("J.", secureMaskUtil.maskName("José María García-López"));
     }
 
     @Test
     void testMaskPayee() {
-        assertEquals("-", SecureMaskUtil.maskPayee(null));
-        assertEquals("-", SecureMaskUtil.maskPayee(""));
-        assertEquals("V.", SecureMaskUtil.maskPayee("Vodafone"));
-        assertEquals("T.", SecureMaskUtil.maskPayee("Turkcell"));
-        assertEquals("A.", SecureMaskUtil.maskPayee("Alacaklı Şirket"));
+        assertEquals("-", secureMaskUtil.maskPayee(null));
+        assertEquals("-", secureMaskUtil.maskPayee(""));
+        assertEquals("V.", secureMaskUtil.maskPayee("Vodafone"));
+        assertEquals("T.", secureMaskUtil.maskPayee("Turkcell"));
+        assertEquals("A.", secureMaskUtil.maskPayee("Alacaklı Şirket"));
     }
 
     @Test
     void testEncryptAndDecryptAccount() {
         String originalAccount = "12345678901234";
-        String encrypted = SecureMaskUtil.encryptAccount(originalAccount);
-        String decrypted = SecureMaskUtil.decryptAccount(encrypted);
+        String encrypted = secureMaskUtil.encryptAccount(originalAccount);
+        String decrypted = secureMaskUtil.decryptAccount(encrypted);
         
         assertNotNull(encrypted);
         assertNotEquals(originalAccount, encrypted);
@@ -64,8 +71,8 @@ class SecureMaskUtilTest {
     @Test
     void testEncryptAndDecryptPhone() {
         String originalPhone = "55512345678";
-        String encrypted = SecureMaskUtil.encryptPhone(originalPhone);
-        String decrypted = SecureMaskUtil.decryptPhone(encrypted);
+        String encrypted = secureMaskUtil.encryptPhone(originalPhone);
+        String decrypted = secureMaskUtil.decryptPhone(encrypted);
         
         assertNotNull(encrypted);
         assertNotEquals(originalPhone, encrypted);
@@ -75,8 +82,8 @@ class SecureMaskUtilTest {
     @Test
     void testEncryptAndDecryptApprovalCode() {
         String originalApprovalCode = "67f1aada-637d-4469-a650-3fb6352527ba";
-        String encrypted = SecureMaskUtil.encryptApprovalCode(originalApprovalCode);
-        String decrypted = SecureMaskUtil.decryptApprovalCode(encrypted);
+        String encrypted = secureMaskUtil.encryptApprovalCode(originalApprovalCode);
+        String decrypted = secureMaskUtil.decryptApprovalCode(encrypted);
         
         assertNotNull(encrypted);
         assertNotEquals(originalApprovalCode, encrypted);
@@ -85,35 +92,35 @@ class SecureMaskUtilTest {
 
     @Test
     void testEncryptNullValues() {
-        assertNull(SecureMaskUtil.encryptAccount(null));
-        assertNull(SecureMaskUtil.encryptPhone(null));
-        assertNull(SecureMaskUtil.encryptApprovalCode(null));
+        assertNull(secureMaskUtil.encryptAccount(null));
+        assertNull(secureMaskUtil.encryptPhone(null));
+        assertNull(secureMaskUtil.encryptApprovalCode(null));
     }
 
     @Test
     void testDecryptNullValues() {
-        assertNull(SecureMaskUtil.decryptAccount(null));
-        assertNull(SecureMaskUtil.decryptPhone(null));
-        assertNull(SecureMaskUtil.decryptApprovalCode(null));
+        assertNull(secureMaskUtil.decryptAccount(null));
+        assertNull(secureMaskUtil.decryptPhone(null));
+        assertNull(secureMaskUtil.decryptApprovalCode(null));
     }
 
     @Test
     void testEncryptEmptyValues() {
-        assertNull(SecureMaskUtil.encryptAccount(""));
-        assertNull(SecureMaskUtil.encryptPhone(""));
-        assertNull(SecureMaskUtil.decryptApprovalCode(""));
+        assertNull(secureMaskUtil.encryptAccount(""));
+        assertNull(secureMaskUtil.encryptPhone(""));
+        assertNull(secureMaskUtil.decryptApprovalCode(""));
     }
 
     @Test
     void testEncryptionConsistency() {
         String account = "12345678901234";
-        String encrypted1 = SecureMaskUtil.encryptAccount(account);
-        String encrypted2 = SecureMaskUtil.encryptAccount(account);
+        String encrypted1 = secureMaskUtil.encryptAccount(account);
+        String encrypted2 = secureMaskUtil.encryptAccount(account);
         
-        assertNotEquals(encrypted1, encrypted2);
+        assertEquals(encrypted1, encrypted2);
         
-        String decrypted1 = SecureMaskUtil.decryptAccount(encrypted1);
-        String decrypted2 = SecureMaskUtil.decryptAccount(encrypted2);
+        String decrypted1 = secureMaskUtil.decryptAccount(encrypted1);
+        String decrypted2 = secureMaskUtil.decryptAccount(encrypted2);
         
         assertEquals(account, decrypted1);
         assertEquals(account, decrypted2);

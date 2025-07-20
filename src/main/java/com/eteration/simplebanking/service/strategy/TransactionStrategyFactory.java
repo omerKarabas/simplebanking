@@ -9,6 +9,7 @@ import com.eteration.simplebanking.exception.StrategyNotFoundException;
 import com.eteration.simplebanking.exception.TransactionValidationException;
 import com.eteration.simplebanking.exception.cosntant.MessageKeys;
 import com.eteration.simplebanking.model.dto.response.TransactionStatusResponse;
+import com.eteration.simplebanking.util.MaskUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -35,7 +36,7 @@ public class TransactionStrategyFactory {
 
         this.transactionRepository = transactionRepository;
 
-        log.info("Initialized TransactionStrategyFactory with {} strategies: {}",
+        log.debug("Initialized TransactionStrategyFactory with {} strategies: {}",
                 strategies.size(), strategies.keySet());
     }
 
@@ -58,8 +59,8 @@ public class TransactionStrategyFactory {
         try {
             return executeTransactionFlow(strategy, account, operationType, parameters);
         } catch (Exception e) {
-            log.error("{} transaction failed: accountNumber={}, error={}",
-                    operationType, account.getAccountNumber(), e.getMessage());
+            log.debug("[{}][FAILED] Account: {}, Error: {}",
+                    operationType, MaskUtil.maskAccount(account.getAccountNumber()), e.getMessage());
             throw new RuntimeException(operationType + " transaction failed: " + e.getMessage(), e);
         }
     }
@@ -77,8 +78,8 @@ public class TransactionStrategyFactory {
         account.post(transaction);
         transactionRepository.save(transaction);
 
-        log.info("{} transaction successful: accountNumber={}, amount={}, approvalCode={}",
-                operationType, account.getAccountNumber(), transaction.getAmount(), approvalCode);
+        log.debug("[{}][SUCCESS] Account: {}, Amount: {}, ApprovalCode: {}",
+                operationType, MaskUtil.maskAccount(account.getAccountNumber()), transaction.getAmount(), MaskUtil.maskApprovalCode(approvalCode));
 
         return new TransactionStatusResponse("OK", approvalCode);
     }

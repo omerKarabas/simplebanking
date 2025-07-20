@@ -7,6 +7,7 @@ import com.eteration.simplebanking.domain.enums.TransactionType;
 import com.eteration.simplebanking.model.dto.response.TransactionStatusResponse;
 import com.eteration.simplebanking.service.interfaces.TransactionService;
 import com.eteration.simplebanking.service.strategy.TransactionStrategyFactory;
+import com.eteration.simplebanking.util.MaskUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
@@ -24,7 +25,7 @@ public class TransactionServiceImpl implements TransactionService {
     @Transactional
     @CacheEvict(value = CacheConstants.BANK_ACCOUNTS_CACHE, key = "#account.accountNumber")
     public TransactionStatusResponse credit(BankAccount account, double amount) {
-        log.debug("Executing credit transaction for account: {}, amount: {}", account.getAccountNumber(), amount);
+        log.debug("[CREDIT] Account: {}, Amount: {}", MaskUtil.maskAccount(account.getAccountNumber()), amount);
         return strategyFactory.executeTransaction(TransactionType.DEPOSIT, account, amount);
     }
 
@@ -32,7 +33,7 @@ public class TransactionServiceImpl implements TransactionService {
     @Transactional
     @CacheEvict(value = CacheConstants.BANK_ACCOUNTS_CACHE, key = "#account.accountNumber")
     public TransactionStatusResponse debit(BankAccount account, double amount) {
-        log.debug("Executing debit transaction for account: {}, amount: {}", account.getAccountNumber(), amount);
+        log.debug("[DEBIT] Account: {}, Amount: {}", MaskUtil.maskAccount(account.getAccountNumber()), amount);
         return strategyFactory.executeTransaction(TransactionType.WITHDRAWAL, account, amount);
     }
 
@@ -40,7 +41,8 @@ public class TransactionServiceImpl implements TransactionService {
     @Transactional
     @CacheEvict(value = CacheConstants.BANK_ACCOUNTS_CACHE, key = "#account.accountNumber")
     public TransactionStatusResponse phoneBillPayment(BankAccount account, PhoneCompany phoneCompany, String phoneNumber, double amount) {
-        log.debug("Executing phone bill payment for account: {}, phone: {}, amount: {}", account.getAccountNumber(), phoneNumber, amount);
+        log.debug("[PHONE_BILL] Account: {}, PhoneCompany: {}, Phone: {}, Amount: {}", 
+                MaskUtil.maskAccount(account.getAccountNumber()), phoneCompany, MaskUtil.maskPhone(phoneNumber), amount);
         return strategyFactory.executeTransaction(TransactionType.PHONE_BILL_PAYMENT, account, phoneCompany, phoneNumber, amount);
     }
 
@@ -48,7 +50,8 @@ public class TransactionServiceImpl implements TransactionService {
     @Transactional
     @CacheEvict(value = CacheConstants.BANK_ACCOUNTS_CACHE, key = "#account.accountNumber")
     public TransactionStatusResponse checkPayment(BankAccount account, String payee, double amount) {
-        log.debug("Executing check payment for account: {}, payee: {}, amount: {}", account.getAccountNumber(), payee, amount);
+        log.debug("[CHECK_PAYMENT] Account: {}, Payee: {}, Amount: {}", 
+                MaskUtil.maskAccount(account.getAccountNumber()), MaskUtil.maskPayee(payee), amount);
         return strategyFactory.executeTransaction(TransactionType.CHECK_PAYMENT, account, payee, amount);
     }
 } 

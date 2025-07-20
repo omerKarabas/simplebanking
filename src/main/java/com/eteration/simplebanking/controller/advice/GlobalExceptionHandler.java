@@ -31,11 +31,9 @@ public class GlobalExceptionHandler {
 
     private final MessageSource messageSource;
 
-
     private String getMessage(MessageKeys messageKey) {
         return messageSource.getMessage(messageKey.getKey(), null, LocaleContextHolder.getLocale());
     }
-
 
     private String getMessage(MessageKeys messageKey, Object... args) {
         return messageSource.getMessage(messageKey.getKey(), args, LocaleContextHolder.getLocale());
@@ -45,9 +43,8 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleInsufficientBalanceException(InsufficientBalanceException ex,
                                                                             WebRequest request) {
 
-        log.error("Insufficient balance exception: {}", ex.getMessage());
+        log.debug("[INSUFFICIENT_BALANCE] Error: {}", ex.getMessage());
 
-        // If exception has message key, use it directly; otherwise use default message
         String i18nMessage = ex.hasMessageKey() 
             ? getMessage(ex.getMessageKey())
             : getMessage(MessageKeys.ERROR_INSUFFICIENT_BALANCE);
@@ -67,9 +64,8 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleAccountNotFoundException(
             AccountNotFoundException ex, WebRequest request) {
 
-        log.error("Account not found exception: {}", ex.getMessage());
+        log.debug("[ACCOUNT_NOT_FOUND] Error: {}", ex.getMessage());
 
-        // If exception has message key, use it directly; otherwise use default message with parameters
         String i18nMessage = ex.hasMessageKey() 
             ? getMessage(ex.getMessageKey(), ex.getParameters())
             : getMessage(MessageKeys.ERROR_ACCOUNT_NOT_FOUND, ex.getMessage());
@@ -89,7 +85,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleInvalidTransactionException(InvalidTransactionException ex,
                                                                            WebRequest request) {
 
-        log.error("Invalid transaction exception: {}", ex.getMessage());
+        log.debug("[INVALID_TRANSACTION] Error: {}", ex.getMessage());
 
         String i18nMessage = ex.hasMessageKey()
             ? getMessage(ex.getMessageKey())
@@ -108,14 +104,13 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(StrategyNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleStrategyNotFoundException(StrategyNotFoundException ex,
-                                                                           WebRequest request) {
+                                                                         WebRequest request) {
 
-        log.error("Strategy not found exception: {}", ex.getMessage());
+        log.debug("[STRATEGY_NOT_FOUND] Error: {}", ex.getMessage());
 
-        // If exception has message key, use it directly; otherwise use default message with parameters
-        String i18nMessage = ex.hasMessageKey() 
+        String i18nMessage = ex.hasMessageKey()
             ? getMessage(ex.getMessageKey(), ex.getParameters())
-            : getMessage(MessageKeys.STRATEGY_NOT_FOUND, ex.getMessage());
+            : getMessage(MessageKeys.ERROR_INVALID_TRANSACTION, ex.getMessage());
 
         ErrorResponse errorResponse = ErrorResponse.builder()
                 .timestamp(LocalDateTime.now())
@@ -130,12 +125,11 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(TransactionValidationException.class)
     public ResponseEntity<ErrorResponse> handleTransactionValidationException(TransactionValidationException ex,
-                                                                           WebRequest request) {
+                                                                              WebRequest request) {
 
-        log.error("Transaction validation exception: {}", ex.getMessage());
+        log.debug("[TRANSACTION_VALIDATION] Error: {}", ex.getMessage());
 
-        // If exception has message key, use it directly; otherwise fallback to mapping
-        String i18nMessage = ex.hasMessageKey() 
+        String i18nMessage = ex.hasMessageKey()
             ? getMessage(ex.getMessageKey())
             : mapValidationExceptionToI18n(ex.getMessage());
 
@@ -149,11 +143,7 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.badRequest().body(errorResponse);
     }
-    
-    /**
-     * Maps validation exception messages to i18n message keys.
-     * This method is used as fallback when exception doesn't have message key.
-     */
+
     private String mapValidationExceptionToI18n(String exceptionMessage) {
         if (exceptionMessage == null) {
             return getMessage(MessageKeys.ERROR_VALIDATION_FAILED);
@@ -183,7 +173,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleIllegalArgumentException(
             IllegalArgumentException ex, WebRequest request) {
 
-        log.error("Illegal argument exception: {}", ex.getMessage());
+        log.debug("[ILLEGAL_ARGUMENT] Error: {}", ex.getMessage());
 
         ErrorResponse errorResponse = ErrorResponse.builder()
                 .timestamp(LocalDateTime.now())
@@ -200,14 +190,13 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleValidationException(
             MethodArgumentNotValidException ex, WebRequest request) {
 
-        log.error("Validation exception: {}", ex.getMessage());
+        log.debug("[VALIDATION_ERROR] Error: {}", ex.getMessage());
 
         Map<String, String> fieldErrors = new HashMap<>();
         ex.getBindingResult().getAllErrors().forEach(error -> {
             String fieldName = ((FieldError) error).getField();
             String errorMessage = error.getDefaultMessage();
             
-            // Try to resolve i18n message for validation errors
             String i18nMessage = resolveValidationMessage(errorMessage);
             fieldErrors.put(fieldName, i18nMessage);
         });
@@ -223,38 +212,35 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.badRequest().body(errorResponse);
     }
-    
-    private String resolveValidationMessage(String defaultMessage) {
-        if (defaultMessage == null) {
+
+    private String resolveValidationMessage(String errorMessage) {
+        if (errorMessage == null) {
             return getMessage(MessageKeys.ERROR_VALIDATION_FAILED);
         }
         
-        // Try to resolve common validation messages
-        switch (defaultMessage) {
-            case "Invalid account number format":
-                return getMessage(MessageKeys.VALIDATION_ACCOUNT_NUMBER_INVALID);
-            case "Account number already exists":
-                return getMessage(MessageKeys.VALIDATION_ACCOUNT_NUMBER_UNIQUE);
-            case "Invalid phone number format":
-                return getMessage(MessageKeys.VALIDATION_PHONE_NUMBER_INVALID);
-            case "Amount must be positive":
-                return getMessage(MessageKeys.VALIDATION_AMOUNT_POSITIVE);
+        switch (errorMessage) {
             case "Account number is required":
                 return getMessage(MessageKeys.VALIDATION_ACCOUNT_NUMBER_REQUIRED);
-            case "Phone number is required":
-                return getMessage(MessageKeys.VALIDATION_PHONE_NUMBER_REQUIRED);
             case "Amount is required":
                 return getMessage(MessageKeys.VALIDATION_AMOUNT_REQUIRED);
+            case "Amount must be positive":
+                return getMessage(MessageKeys.VALIDATION_AMOUNT_POSITIVE);
+            case "Phone number is required":
+                return getMessage(MessageKeys.VALIDATION_PHONE_NUMBER_REQUIRED);
+            case "Invalid phone number format":
+                return getMessage(MessageKeys.VALIDATION_PHONE_NUMBER_INVALID);
+            case "Invalid account number format":
+                return getMessage(MessageKeys.VALIDATION_ACCOUNT_NUMBER_INVALID);
             default:
-                return defaultMessage;
+                return getMessage(MessageKeys.ERROR_VALIDATION_FAILED);
         }
     }
 
-        @ExceptionHandler(HttpMessageNotReadableException.class)
+    @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ErrorResponse> handleHttpMessageNotReadableException(HttpMessageNotReadableException ex,
                                                                                 WebRequest request) {
 
-        log.error("HTTP message not readable exception: {}", ex.getMessage());
+        log.debug("[HTTP_MESSAGE_NOT_READABLE] Error: {}", ex.getMessage());
 
         ErrorResponse errorResponse = ErrorResponse.builder()
                 .timestamp(LocalDateTime.now())
@@ -271,8 +257,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleGenericException(
             Exception ex, WebRequest request) {
 
-        log.error("Unexpected error occurred: {}", ex.getMessage(), ex);
-        log.error("Exception stack trace:", ex);
+        log.debug("[UNEXPECTED_ERROR] Error: {}", ex.getMessage());
 
         ErrorResponse errorResponse = ErrorResponse.builder()
                 .timestamp(LocalDateTime.now())

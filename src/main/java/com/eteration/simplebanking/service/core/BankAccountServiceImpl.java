@@ -8,6 +8,7 @@ import com.eteration.simplebanking.exception.cosntant.MessageKeys;
 import com.eteration.simplebanking.model.dto.response.BankAccountResponse;
 import com.eteration.simplebanking.model.mapper.BankAccountMapper;
 import com.eteration.simplebanking.service.interfaces.BankAccountService;
+import com.eteration.simplebanking.util.MaskUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
@@ -39,7 +40,7 @@ public class BankAccountServiceImpl implements BankAccountService {
     @Override
     @Cacheable(value = CacheConstants.BANK_ACCOUNTS_CACHE, key = "#accountNumber")
     public BankAccount findAccountByNumber(String accountNumber) {
-        log.debug("Cache miss for account number: {}", accountNumber);
+        log.debug("[CACHE_MISS] Account: {}", MaskUtil.maskAccount(accountNumber));
         return bankAccountRepository.findByAccountNumber(accountNumber)
                 .orElseThrow(() -> new AccountNotFoundException(MessageKeys.ACCOUNT_NOT_FOUND_WITH_NUMBER, accountNumber));
     }
@@ -47,11 +48,10 @@ public class BankAccountServiceImpl implements BankAccountService {
     @Override
     @Cacheable(value = CacheConstants.BANK_ACCOUNTS_CACHE, key = "'response:' + #accountNumber")
     public BankAccountResponse getAccount(String accountNumber) {
-        log.debug("Cache miss for account response: {}", accountNumber);
+        log.debug("[CACHE_MISS_RESPONSE] Account: {}", MaskUtil.maskAccount(accountNumber));
         BankAccount account = findAccountByNumber(accountNumber);
         return bankAccountMapper.toAccountResponse(account);
     }
-
 
     @Override
     @CacheEvict(value = CacheConstants.BANK_ACCOUNTS_CACHE, key = "#account.accountNumber")

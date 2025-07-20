@@ -14,13 +14,8 @@ import java.util.List;
 
 import static com.eteration.simplebanking.TestConstants.*;
 
-/**
- * Test verilerini oluşturmak için kullanılan builder sınıfı.
- * Bu sınıf sayesinde test verilerini tutarlı ve tekrar kullanılabilir şekilde oluşturabiliriz.
- */
 public final class TestDataBuilder {
     
-    // BankAccount Builder Methods
     public static BankAccount createTestAccount() {
         return BankAccount.builder()
                 .accountNumber(TEST_ACCOUNT_NUMBER)
@@ -61,7 +56,6 @@ public final class TestDataBuilder {
                 .build();
     }
     
-    // Transaction Builder Methods
     public static DepositTransaction createDepositTransaction(double amount) {
         DepositTransaction transaction = new DepositTransaction();
         transaction.setAmount(amount);
@@ -83,7 +77,6 @@ public final class TestDataBuilder {
         return transaction;
     }
     
-    // Request Builder Methods
     public static CreateAccountRequest createAccountRequest() {
         return new CreateAccountRequest(TEST_OWNER_NAME, TEST_ACCOUNT_NUMBER, TEST_PHONE_NUMBER);
     }
@@ -124,7 +117,6 @@ public final class TestDataBuilder {
         return new TransactionRequest(TransactionType.WITHDRAWAL, INSUFFICIENT_AMOUNT);
     }
     
-    // Response Builder Methods
     public static BankAccountResponse createBankAccountResponse() {
         return new BankAccountResponse(TEST_ACCOUNT_NUMBER, TEST_OWNER_NAME, INITIAL_BALANCE, null, null);
     }
@@ -153,7 +145,6 @@ public final class TestDataBuilder {
         return new TransactionStatusResponse(status, approvalCode);
     }
     
-    // List Builder Methods
     public static List<BankAccount> createTestAccountList() {
         List<BankAccount> accounts = new ArrayList<>();
         accounts.add(createTestAccount());
@@ -169,7 +160,6 @@ public final class TestDataBuilder {
         return requests;
     }
     
-    // Utility class - instantiation yasak
     private TestDataBuilder() {
         throw new UnsupportedOperationException("Utility class cannot be instantiated");
     }

@@ -31,9 +31,6 @@ public class CheckTransaction extends Transaction {
 	}
 	
 	private String generateCheckNumber() {
-		// TODO: Bu date işlemleri ileride DateUtils sınıfına taşınacak
-		// TODO: Sequence yönetimi için CheckNumberService kullanılacak
-		// TODO: Format için constant tanımlanacak
 		LocalDateTime now = LocalDateTime.now();
 		String year = String.valueOf(now.getYear());
 		String monthDay = String.format("%02d%02d", now.getMonthValue(), now.getDayOfMonth());

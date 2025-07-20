@@ -39,10 +39,8 @@ public class BankingFacadeServiceImpl implements BankingFacadeService {
     public TransactionStatusResponse credit(String accountNumber, double amount) {
         log.info("Credit transaction: accountNumber={}, amount={}", accountNumber, amount);
         BankAccount account = bankAccountService.findAccountByNumber(accountNumber);
-        // Ensure account is saved before transaction
         account = bankAccountService.saveAccount(account);
-        TransactionStatusResponse result = transactionService.credit(account, amount);
-        return result;
+        return transactionService.credit(account, amount);
     }
 
     @Override
@@ -50,10 +48,8 @@ public class BankingFacadeServiceImpl implements BankingFacadeService {
     public TransactionStatusResponse debit(String accountNumber, double amount) {
         log.info("Debit transaction: accountNumber={}, amount={}", accountNumber, amount);
         BankAccount account = bankAccountService.findAccountByNumber(accountNumber);
-        // Ensure account is saved before transaction
         account = bankAccountService.saveAccount(account);
-        TransactionStatusResponse result = transactionService.debit(account, amount);
-        return result;
+        return transactionService.debit(account, amount);
     }
 
     @Override
@@ -61,10 +57,8 @@ public class BankingFacadeServiceImpl implements BankingFacadeService {
     public TransactionStatusResponse phoneBillPayment(String accountNumber, PhoneCompany phoneCompany, String phoneNumber, double amount) {
         log.info("Phone bill payment: accountNumber={}, phoneCompany={}, phoneNumber={}, amount={}", accountNumber, phoneCompany, phoneNumber, amount);
         BankAccount account = bankAccountService.findAccountByNumber(accountNumber);
-        // Ensure account is saved before transaction
         account = bankAccountService.saveAccount(account);
-        TransactionStatusResponse result = transactionService.phoneBillPayment(account, phoneCompany, phoneNumber, amount);
-        return result;
+        return transactionService.phoneBillPayment(account, phoneCompany, phoneNumber, amount);
     }
 
     @Override
@@ -72,9 +66,7 @@ public class BankingFacadeServiceImpl implements BankingFacadeService {
     public TransactionStatusResponse checkPayment(String accountNumber, String payee, double amount) {
         log.info("Check payment: accountNumber={}, payee={}, amount={}", accountNumber, payee, amount);
         BankAccount account = bankAccountService.findAccountByNumber(accountNumber);
-        // Ensure account is saved before transaction
         account = bankAccountService.saveAccount(account);
-        TransactionStatusResponse result = transactionService.checkPayment(account, payee, amount);
-        return result;
+        return transactionService.checkPayment(account, payee, amount);
     }
 } 

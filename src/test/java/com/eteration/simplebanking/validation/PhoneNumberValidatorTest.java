@@ -44,7 +44,6 @@ class PhoneNumberValidatorTest {
 
     @Test
     void testPhoneNumberWithSpacesAndDashes() {
-        // Yeni validation logic'inde temizleme yok, sadece raw input
         assertFalse(validator.isValid("555-123-4567", context));
         assertFalse(validator.isValid("555 123 4567", context));
         assertFalse(validator.isValid("555 - 123 - 4567", context));

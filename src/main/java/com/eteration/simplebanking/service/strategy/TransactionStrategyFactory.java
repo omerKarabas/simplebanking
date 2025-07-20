@@ -105,8 +105,6 @@ public class TransactionStrategyFactory {
         if (transaction == null) {
             throw new TransactionValidationException(MessageKeys.VALIDATION_TRANSACTION_NULL);
         }
-        // Transaction validasyonları artık anotasyonlarla yapılıyor
-        // @TransactionAmount ve @TransactionDate anotasyonları kullanılıyor
     }
 
     public boolean hasStrategy(TransactionType transactionType) {

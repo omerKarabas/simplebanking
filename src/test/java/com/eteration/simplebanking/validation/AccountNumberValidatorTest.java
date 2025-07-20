@@ -48,7 +48,6 @@ class AccountNumberValidatorTest {
 
     @Test
     void testAccountNumberWithSpacesAndDashes() {
-        // Yeni validation logic'inde temizleme yok, sadece raw input
         assertFalse(validator.isValid("123-456-7890", context));
         assertFalse(validator.isValid("123 456 7890", context));
         assertFalse(validator.isValid("123 - 456 - 7890", context));
@@ -75,12 +74,10 @@ class AccountNumberValidatorTest {
         assertTrue(validator.isValid("", context));
         assertTrue(validator.isValid("   ", context));
         
-        // Debug: Test the regex pattern directly
         String testValue = "1234567890";
         boolean regexMatch = testValue.matches("^\\d{10,16}$");
         System.err.println("Test value: " + testValue + ", Length: " + testValue.length() + ", Regex match: " + regexMatch);
         
-        // Debug: Test validator step by step
         boolean validatorResult = validator.isValid(testValue, context);
         System.err.println("Validator result: " + validatorResult);
         

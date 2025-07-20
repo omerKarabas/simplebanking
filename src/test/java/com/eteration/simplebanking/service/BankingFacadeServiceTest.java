@@ -4,209 +4,162 @@ import com.eteration.simplebanking.domain.entity.BankAccount;
 import com.eteration.simplebanking.exception.AccountNotFoundException;
 import com.eteration.simplebanking.model.dto.response.BankAccountResponse;
 import com.eteration.simplebanking.model.dto.response.TransactionStatusResponse;
-import com.eteration.simplebanking.service.impl.BankingFacadeServiceImpl;
-import org.junit.jupiter.api.BeforeEach;
+import com.eteration.simplebanking.service.interfaces.BankingFacadeService;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.TestPropertySource;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyDouble;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
-@ExtendWith(MockitoExtension.class)
+@SpringBootTest
+@TestPropertySource(properties = {
+    "spring.jpa.hibernate.ddl-auto=create-drop",
+    "spring.datasource.url=jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE"
+})
+@Transactional
 class BankingFacadeServiceTest {
 
-    @Mock
-    private BankAccountService bankAccountService;
+    @Autowired
+    private BankingFacadeService bankingFacadeService;
 
-    @Mock
-    private TransactionService transactionService;
-
-    @InjectMocks
-    private BankingFacadeServiceImpl bankingFacadeService;
-
-    private BankAccount testAccount;
-    private BankAccountResponse testAccountResponse;
-    private TransactionStatusResponse testTransactionResponse;
-
-    @BeforeEach
-    void setUp() {
-        testAccount = BankAccount.builder()
-                .owner("Test Owner")
-                .accountNumber("12345")
-                .balance(1000.0)
-                .build();
-
-        testAccountResponse = new BankAccountResponse(
-                "12345",
-                "Test Owner",
-                1000.0,
-                LocalDateTime.now(),
-                null
-        );
-
-        testTransactionResponse = new TransactionStatusResponse("OK", "test-approval-code");
+    private String generateUniqueAccountNumber() {
+        return "TEST_" + UUID.randomUUID().toString().substring(0, 8);
     }
 
     @Test
     void createBankAccount_Success() {
         String owner = "Test Owner";
-        String accountNumber = "12345";
-        when(bankAccountService.createAccount(owner, accountNumber)).thenReturn(testAccountResponse);
+        String accountNumber = generateUniqueAccountNumber();
 
         BankAccountResponse result = bankingFacadeService.createBankAccount(owner, accountNumber);
 
         assertNotNull(result);
-        assertEquals(testAccountResponse, result);
-        verify(bankAccountService).createAccount(owner, accountNumber);
+        assertEquals(accountNumber, result.accountNumber());
+        assertEquals(owner, result.owner());
+        assertEquals(0.0, result.balance());
     }
 
     @Test
     void getBankAccount_Success() {
-        String accountNumber = "12345";
-        when(bankAccountService.getAccount(accountNumber)).thenReturn(testAccountResponse);
-
+        String owner = "Test Owner";
+        String accountNumber = generateUniqueAccountNumber();
+        
+        // First create an account
+        bankingFacadeService.createBankAccount(owner, accountNumber);
+        
+        // Then get the account
         BankAccountResponse result = bankingFacadeService.getBankAccount(accountNumber);
 
         assertNotNull(result);
-        assertEquals(testAccountResponse, result);
-        verify(bankAccountService).getAccount(accountNumber);
+        assertEquals(accountNumber, result.accountNumber());
+        assertEquals(owner, result.owner());
     }
 
     @Test
     void credit_Success() {
-        String accountNumber = "12345";
+        String accountNumber = generateUniqueAccountNumber();
         double amount = 500.0;
-        when(bankAccountService.findAccountByNumber(accountNumber)).thenReturn(testAccount);
-        when(transactionService.credit(testAccount, amount)).thenReturn(testTransactionResponse);
-        doNothing().when(bankAccountService).saveAccount(testAccount);
-
+        
+        // First create an account
+        bankingFacadeService.createBankAccount("Test Owner", accountNumber);
+        
+        // Then credit
         TransactionStatusResponse result = bankingFacadeService.credit(accountNumber, amount);
 
         assertNotNull(result);
-        assertEquals(testTransactionResponse, result);
-        verify(bankAccountService).findAccountByNumber(accountNumber);
-        verify(transactionService).credit(testAccount, amount);
-        verify(bankAccountService).saveAccount(testAccount);
+        assertEquals("OK", result.status());
+        assertNotNull(result.approvalCode());
     }
 
     @Test
     void debit_Success() {
-        String accountNumber = "12345";
+        String accountNumber = generateUniqueAccountNumber();
         double amount = 300.0;
-        when(bankAccountService.findAccountByNumber(accountNumber)).thenReturn(testAccount);
-        when(transactionService.debit(testAccount, amount)).thenReturn(testTransactionResponse);
-        doNothing().when(bankAccountService).saveAccount(testAccount);
-
+        
+        // First create an account and credit it
+        bankingFacadeService.createBankAccount("Test Owner", accountNumber);
+        bankingFacadeService.credit(accountNumber, 1000.0);
+        
+        // Then debit
         TransactionStatusResponse result = bankingFacadeService.debit(accountNumber, amount);
 
         assertNotNull(result);
-        assertEquals(testTransactionResponse, result);
-        verify(bankAccountService).findAccountByNumber(accountNumber);
-        verify(transactionService).debit(testAccount, amount);
-        verify(bankAccountService).saveAccount(testAccount);
+        assertEquals("OK", result.status());
+        assertNotNull(result.approvalCode());
     }
 
     @Test
     void credit_AccountNotFound_ThrowsException() {
         String accountNumber = "99999";
         double amount = 500.0;
-        when(bankAccountService.findAccountByNumber(accountNumber)).thenThrow(new AccountNotFoundException("Account not found"));
 
         assertThrows(AccountNotFoundException.class, () -> {
             bankingFacadeService.credit(accountNumber, amount);
         });
-        verify(bankAccountService).findAccountByNumber(accountNumber);
-        verify(transactionService, never()).credit(any(), anyDouble());
-        verify(bankAccountService, never()).saveAccount(any());
     }
 
     @Test
     void debit_AccountNotFound_ThrowsException() {
         String accountNumber = "99999";
         double amount = 300.0;
-        when(bankAccountService.findAccountByNumber(accountNumber)).thenThrow(new AccountNotFoundException("Account not found"));
 
         assertThrows(AccountNotFoundException.class, () -> {
             bankingFacadeService.debit(accountNumber, amount);
         });
-        verify(bankAccountService).findAccountByNumber(accountNumber);
-        verify(transactionService, never()).debit(any(), anyDouble());
-        verify(bankAccountService, never()).saveAccount(any());
-    }
-
-    @Test
-    void credit_InsufficientBalance_ThrowsException() {
-        String accountNumber = "12345";
-        double amount = 1500.0;
-        when(bankAccountService.findAccountByNumber(accountNumber)).thenReturn(testAccount);
-        when(transactionService.credit(testAccount, amount)).thenThrow(new RuntimeException("Insufficient balance"));
-
-        assertThrows(RuntimeException.class, () -> {
-            bankingFacadeService.credit(accountNumber, amount);
-        });
-        verify(bankAccountService).findAccountByNumber(accountNumber);
-        verify(transactionService).credit(testAccount, amount);
-        verify(bankAccountService, never()).saveAccount(any());
     }
 
     @Test
     void debit_InsufficientBalance_ThrowsException() {
-        String accountNumber = "12345";
+        String accountNumber = generateUniqueAccountNumber();
         double amount = 1500.0;
-        when(bankAccountService.findAccountByNumber(accountNumber)).thenReturn(testAccount);
-        when(transactionService.debit(testAccount, amount)).thenThrow(new RuntimeException("Insufficient balance"));
-
+        
+        // First create an account and credit it with less than the debit amount
+        bankingFacadeService.createBankAccount("Test Owner", accountNumber);
+        bankingFacadeService.credit(accountNumber, 1000.0);
+        
+        // Then try to debit more than available
         assertThrows(RuntimeException.class, () -> {
             bankingFacadeService.debit(accountNumber, amount);
         });
-        verify(bankAccountService).findAccountByNumber(accountNumber);
-        verify(transactionService).debit(testAccount, amount);
-        verify(bankAccountService, never()).saveAccount(any());
     }
 
     @Test
-    void credit_ZeroAmount_Success() {
-        String accountNumber = "12345";
-        double amount = 0.0;
-        when(bankAccountService.findAccountByNumber(accountNumber)).thenReturn(testAccount);
-        when(transactionService.credit(testAccount, amount)).thenReturn(testTransactionResponse);
-        doNothing().when(bankAccountService).saveAccount(testAccount);
-
+    void credit_MinimumAmount_Success() {
+        String accountNumber = generateUniqueAccountNumber();
+        double amount = 0.01; // Minimum allowed amount
+        
+        // First create an account
+        bankingFacadeService.createBankAccount("Test Owner", accountNumber);
+        
+        // Then credit minimum amount
         TransactionStatusResponse result = bankingFacadeService.credit(accountNumber, amount);
 
         assertNotNull(result);
-        assertEquals(testTransactionResponse, result);
-        verify(bankAccountService).findAccountByNumber(accountNumber);
-        verify(transactionService).credit(testAccount, amount);
-        verify(bankAccountService).saveAccount(testAccount);
+        assertEquals("OK", result.status());
+        assertNotNull(result.approvalCode());
     }
 
     @Test
-    void debit_ZeroAmount_Success() {
-        String accountNumber = "12345";
-        double amount = 0.0;
-        when(bankAccountService.findAccountByNumber(accountNumber)).thenReturn(testAccount);
-        when(transactionService.debit(testAccount, amount)).thenReturn(testTransactionResponse);
-        doNothing().when(bankAccountService).saveAccount(testAccount);
-
+    void debit_MinimumAmount_Success() {
+        String accountNumber = generateUniqueAccountNumber();
+        double amount = 0.01; // Minimum allowed amount
+        
+        // First create an account and credit it
+        bankingFacadeService.createBankAccount("Test Owner", accountNumber);
+        bankingFacadeService.credit(accountNumber, 1000.0);
+        
+        // Then debit minimum amount
         TransactionStatusResponse result = bankingFacadeService.debit(accountNumber, amount);
 
         assertNotNull(result);
-        assertEquals(testTransactionResponse, result);
-        verify(bankAccountService).findAccountByNumber(accountNumber);
-        verify(transactionService).debit(testAccount, amount);
-        verify(bankAccountService).saveAccount(testAccount);
+        assertEquals("OK", result.status());
+        assertNotNull(result.approvalCode());
     }
 } 

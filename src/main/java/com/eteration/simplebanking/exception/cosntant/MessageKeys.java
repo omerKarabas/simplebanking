@@ -21,7 +21,24 @@ public enum MessageKeys {
     ERROR_TITLE_INVALID_TRANSACTION("error.title.invalid.transaction"),
     ERROR_TITLE_VALIDATION_ERROR("error.title.validation.error"),
     ERROR_TITLE_INVALID_REQUEST_BODY("error.title.invalid.request.body"),
-    ERROR_TITLE_INTERNAL_SERVER_ERROR("error.title.internal.server.error");
+    ERROR_TITLE_INTERNAL_SERVER_ERROR("error.title.internal.server.error"),
+
+    // Transaction Validation Messages
+    VALIDATION_TRANSACTION_TYPE_NULL("validation.transaction.type.null"),
+    VALIDATION_BANK_ACCOUNT_NULL("validation.bank.account.null"),
+    VALIDATION_ACCOUNT_NUMBER_NULL_OR_EMPTY("validation.account.number.null.or.empty"),
+    VALIDATION_TRANSACTION_PARAMETERS_NULL("validation.transaction.parameters.null"),
+    VALIDATION_TRANSACTION_NULL("validation.transaction.null"),
+    VALIDATION_TRANSACTION_AMOUNT_NEGATIVE("validation.transaction.amount.negative"),
+    VALIDATION_TRANSACTION_DATE_NULL("validation.transaction.date.null"),
+
+    // Business Logic Messages
+    INSUFFICIENT_BALANCE_FOR_PHONE_BILL("error.insufficient.balance.phone.bill"),
+    INSUFFICIENT_BALANCE_FOR_CHECK_PAYMENT("error.insufficient.balance.check.payment"),
+    ACCOUNT_NOT_FOUND_WITH_NUMBER("error.account.not.found.with.number"),
+    
+    // Strategy Messages
+    STRATEGY_NOT_FOUND("error.strategy.not.found");
 
     private final String key;
 } 

@@ -4,7 +4,7 @@ import com.eteration.simplebanking.model.dto.response.TransactionStatusResponse;
 import com.eteration.simplebanking.model.dto.response.BankAccountResponse;
 import com.eteration.simplebanking.model.dto.request.CreateAccountRequest;
 import com.eteration.simplebanking.model.dto.request.TransactionRequest;
-import com.eteration.simplebanking.service.BankingFacadeService;
+import com.eteration.simplebanking.service.interfaces.BankingFacadeService;
 
 import java.util.Objects;
 import org.junit.jupiter.api.Assertions;

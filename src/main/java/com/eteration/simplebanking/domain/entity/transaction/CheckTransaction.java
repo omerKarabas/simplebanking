@@ -2,6 +2,7 @@ package com.eteration.simplebanking.domain.entity.transaction;
 
 import com.eteration.simplebanking.domain.entity.BankAccount;
 import com.eteration.simplebanking.exception.InsufficientBalanceException;
+import com.eteration.simplebanking.exception.cosntant.MessageKeys;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -46,7 +47,7 @@ public class CheckTransaction extends Transaction {
 	@Override
 	public void execute(BankAccount account) throws InsufficientBalanceException {
 		if (account.getBalance() < amount) {
-			throw new InsufficientBalanceException("Insufficient balance for check payment");
+			throw new InsufficientBalanceException(MessageKeys.INSUFFICIENT_BALANCE_FOR_CHECK_PAYMENT);
 		}
 		account.setBalance(account.getBalance() - amount);
 	}

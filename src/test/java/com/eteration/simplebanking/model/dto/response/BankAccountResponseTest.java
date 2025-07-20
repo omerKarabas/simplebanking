@@ -30,7 +30,7 @@ class BankAccountResponseTest {
         assertEquals(accountNumber, response.accountNumber());
         assertEquals(owner, response.owner());
         assertEquals(balance, response.balance());
-        assertEquals(createDate, response.createDate());
+        assertEquals(createDate, response.createdAt());
         assertEquals(transactions, response.transactions());
     }
 
@@ -45,7 +45,7 @@ class BankAccountResponseTest {
         assertNull(response.accountNumber());
         assertNull(response.owner());
         assertEquals(0.0, response.balance());
-        assertNull(response.createDate());
+        assertNull(response.createdAt());
         assertNull(response.transactions());
     }
 
@@ -67,7 +67,7 @@ class BankAccountResponseTest {
         assertEquals(accountNumber, response.accountNumber());
         assertEquals(owner, response.owner());
         assertEquals(balance, response.balance());
-        assertEquals(createDate, response.createDate());
+        assertEquals(createDate, response.createdAt());
         assertNotNull(response.transactions());
         assertTrue(response.transactions().isEmpty());
     }
@@ -93,7 +93,7 @@ class BankAccountResponseTest {
         assertEquals(accountNumber, response.accountNumber());
         assertEquals(owner, response.owner());
         assertEquals(balance, response.balance());
-        assertEquals(createDate, response.createDate());
+        assertEquals(createDate, response.createdAt());
         assertEquals(transactions, response.transactions());
         assertEquals(2, response.transactions().size());
     }

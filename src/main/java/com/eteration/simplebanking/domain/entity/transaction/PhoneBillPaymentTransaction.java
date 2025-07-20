@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import com.eteration.simplebanking.exception.InsufficientBalanceException;
+import com.eteration.simplebanking.exception.cosntant.MessageKeys;
 import com.eteration.simplebanking.domain.entity.BankAccount;
 import com.eteration.simplebanking.domain.enums.PhoneCompany;
 
@@ -34,7 +35,7 @@ public class PhoneBillPaymentTransaction extends Transaction {
 	@Override
 	public void execute(BankAccount account) throws InsufficientBalanceException {
 		if (account.getBalance() < amount) {
-			throw new InsufficientBalanceException("Insufficient balance for phone bill payment");
+			throw new InsufficientBalanceException(MessageKeys.INSUFFICIENT_BALANCE_FOR_PHONE_BILL);
 		}
 		account.setBalance(account.getBalance() - amount);
 	}

@@ -6,7 +6,7 @@ import java.util.List;
 public record BankAccountResponse(String accountNumber,
                                   String owner,
                                   double balance,
-                                  LocalDateTime createDate,
+                                  LocalDateTime createdAt,
                                   List<TransactionResponse> transactions
 ) {
 }

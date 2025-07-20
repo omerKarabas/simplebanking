@@ -2,42 +2,42 @@ package com.eteration.simplebanking.exception;
 
 import com.eteration.simplebanking.exception.cosntant.MessageKeys;
 
-public class AccountNotFoundException extends RuntimeException {
+public class StrategyNotFoundException extends RuntimeException {
     
     private final MessageKeys messageKey;
     private final Object[] parameters;
     
-    public AccountNotFoundException() {
+    public StrategyNotFoundException() {
         super();
         this.messageKey = null;
         this.parameters = null;
     }
     
-    public AccountNotFoundException(String message) {
+    public StrategyNotFoundException(String message) {
         super(message);
         this.messageKey = null;
         this.parameters = null;
     }
     
-    public AccountNotFoundException(String message, Throwable cause) {
+    public StrategyNotFoundException(String message, Throwable cause) {
         super(message, cause);
         this.messageKey = null;
         this.parameters = null;
     }
     
-    public AccountNotFoundException(MessageKeys messageKey) {
+    public StrategyNotFoundException(MessageKeys messageKey) {
         super(messageKey.getKey());
         this.messageKey = messageKey;
         this.parameters = null;
     }
     
-    public AccountNotFoundException(MessageKeys messageKey, Throwable cause) {
+    public StrategyNotFoundException(MessageKeys messageKey, Throwable cause) {
         super(messageKey.getKey(), cause);
         this.messageKey = messageKey;
         this.parameters = null;
     }
     
-    public AccountNotFoundException(MessageKeys messageKey, Object... parameters) {
+    public StrategyNotFoundException(MessageKeys messageKey, Object... parameters) {
         super(messageKey.getKey());
         this.messageKey = messageKey;
         this.parameters = parameters;

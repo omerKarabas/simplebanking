@@ -24,7 +24,7 @@ import jakarta.validation.Valid;
 
 @Slf4j
 @RestController
-@RequestMapping("/bank-account/v1")
+@RequestMapping("/api/v1/bank-account")
 @RequiredArgsConstructor
 @Tag(name = "Bank Account", description = "Bank account management operations")
 public class BankAccountController {

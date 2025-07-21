@@ -150,7 +150,7 @@ docker-compose -f docker-compose-development.yml up -d
 
 #### Create Account
 ```http
-POST /bank-account/v1/create
+POST /api/v1/bank-account/create
 Content-Type: application/json
 
 {
@@ -161,7 +161,7 @@ Content-Type: application/json
 
 #### Deposit Money
 ```http
-POST /bank-account/v1/credit/{accountNumber}
+POST /api/v1/bank-account/credit/{accountNumber}
 Content-Type: application/json
 
 {
@@ -171,7 +171,7 @@ Content-Type: application/json
 
 #### Withdraw Money
 ```http
-POST /bank-account/v1/debit/{accountNumber}
+POST /api/v1/bank-account/debit/{accountNumber}
 Content-Type: application/json
 
 {
@@ -181,7 +181,7 @@ Content-Type: application/json
 
 #### Phone Bill Payment
 ```http
-POST /bank-account/v1/phone-bill-payment/{accountNumber}
+POST /api/v1/bank-account/phone-bill-payment/{accountNumber}
 Content-Type: application/json
 
 {
@@ -193,7 +193,7 @@ Content-Type: application/json
 
 #### Check Payment
 ```http
-POST /bank-account/v1/check-payment/{accountNumber}
+POST /api/v1/bank-account/check-payment/{accountNumber}
 Content-Type: application/json
 
 {
@@ -204,7 +204,7 @@ Content-Type: application/json
 
 #### Query Account
 ```http
-GET /bank-account/v1/{accountNumber}
+GET /api/v1/bank-account/{accountNumber}
 ```
 
 ## Database Structure and Entities
@@ -577,7 +577,7 @@ public class BankingFacadeServiceImpl implements BankingFacadeService {
 **Usage in Controller:**
 ```java
 @RestController
-@RequestMapping("/bank-account/v1")
+@RequestMapping("/api/v1/bank-account")
 public class BankAccountController {
     private final BankingFacadeService bankingFacadeService;
     
@@ -888,7 +888,7 @@ validation.amount.positive=Miktar pozitif olmalıdır
     "status": 400,
     "error": "Yetersiz Bakiye",
     "message": "Bu işlem için yetersiz bakiye",
-    "path": "/api/v1/accounts/123/credit",
+    "path": "/api/v1/bank-account/123/credit",
     "details": {
         "field": "error message"
     }
@@ -1152,7 +1152,7 @@ class BankAccountControllerTest {
             .thenReturn(expectedResponse);
         
         // When & Then
-        mockMvc.perform(get("/api/v1/accounts/{accountNumber}", accountNumber))
+        mockMvc.perform(get("/api/v1/bank-account/{accountNumber}", accountNumber))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.accountNumber").value(expectedResponse.getAccountNumber()))
             .andExpect(jsonPath("$.balance").value(expectedResponse.getBalance()));
@@ -1216,7 +1216,7 @@ mvn test -Dtest=*IntegrationTest
 
 *GitHub Actions workflow dashboard showing automated test execution, build processes, and deployment pipeline. This CI/CD pipeline was implemented to continuously monitor and control our test suite, ensuring code quality and reliability. The workflow automatically runs tests on every push and pull request, providing real-time feedback on test results and build status.*
 
-![github-action.png](images/github-action.png)
+![github-action.png](src/main/resources/images/github-action.png)
 
 
 

@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    image: simplebanking-app
+    container_name: simplebanking-app
+    depends_on:
+      - postgres
+    env_file:
+      - ../docker/env.list
+    ports:
+      - "8080:8080"
+
+  postgres:
+    image: postgres:13
+    container_name: simplebanking-app-postgres
+    env_file:
+      - ../docker/env.list
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_app_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_app_data: 

@@ -1216,7 +1216,7 @@ mvn test -Dtest=*IntegrationTest
 
 *GitHub Actions workflow dashboard showing automated test execution, build processes, and deployment pipeline. This CI/CD pipeline was implemented to continuously monitor and control our test suite, ensuring code quality and reliability. The workflow automatically runs tests on every push and pull request, providing real-time feedback on test results and build status.*
 
-![github-action.png](images/github-action.png)
+![github-action.png](src/main/resources/images/github-action.png)
 
 
 
